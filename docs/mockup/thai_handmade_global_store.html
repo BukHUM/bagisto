@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyondary | งานคราฟต์ไทยระดับพรีเมียม สู่ไลฟ์สไตล์ไร้พรมแดน</title>
+    
+    <!-- นำเข้า Google Fonts: Prompt สำหรับภาษาไทย และ Playfair Display สำหรับหัวข้อให้ดูพรีเมียม -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- นำเข้า FontAwesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- นำเข้า Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ตั้งค่า Tailwind Configuration ให้เข้ากับโลโก้ใหม่ -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#B88B54',   // สีทองบรอนซ์ (จากลายกนกบนช้าง)
+                            dark: '#3A2618',   // สีน้ำตาลเข้ม (จากตัวช้างและตัวหนังสือ)
+                            earth: '#6B4A31',  // สีน้ำตาลไม้ (สำหรับส่วนรอง)
+                            light: '#F8F6F0',  // สีครีมวอร์มโทน (จากพื้นหลังโลโก้)
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* สไตล์เพิ่มเติมสำหรับการแสดงผล */
+        .image-placeholder {
+            background-color: #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6B7280;
+            font-size: 0.875rem;
+            text-align: center;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover .image-placeholder {
+            transform: scale(1.05);
+        }
+        .overflow-hidden-image {
+            overflow: hidden;
+        }
+        /* ใช้สำหรับเบลนด์พื้นหลังโลโก้ให้เนียนกับเว็บ */
+        .blend-multiply {
+            mix-blend-mode: multiply;
+        }
+    </style>
+</head>
+<body class="bg-brand-light font-sans text-brand-dark antialiased">
+
+    <!-- แถบประกาศด้านบน (Top Announcement Bar) -->
+    <div class="bg-brand-earth text-white text-xs md:text-sm text-center py-2 px-4 flex justify-center items-center gap-2 tracking-wide">
+        <i class="fa-solid fa-plane"></i> จัดส่งฟรีทั่วโลก เมื่อสั่งซื้อครบ $150 USD ขึ้นไป
+    </div>
+
+    <!-- แถบนำทาง (Navigation Bar) -->
+    <header class="bg-brand-light shadow-sm sticky top-0 z-50 border-b border-[#EAE5DA]">
+        <div class="container mx-auto px-4 lg:px-8 py-3 md:py-4 flex justify-between items-center">
+            
+            <!-- เมนูแฮมเบอร์เกอร์สำหรับมือถือ -->
+            <button class="lg:hidden text-brand-dark hover:text-brand-gold text-2xl transition" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- โลโก้ (พร้อมระบบ Fallback ถ้าโหลดรูปไม่ได้) -->
+            <a href="index.html" class="flex items-center justify-center">
+                <img src="1000021903.png" 
+                     alt="Beyondary Thai Craft Logo" 
+                     class="h-10 md:h-14 w-auto object-contain blend-multiply"
+                     onerror="this.onerror=null; this.style.display='none'; document.getElementById('fallback-logo-header').style.display='flex';">
+                
+                <!-- โลโก้สำรองแบบตัวอักษร จะแสดงเมื่อโหลดภาพ 1000021903.png ไม่สำเร็จ -->
+                <div id="fallback-logo-header" class="hidden flex-col items-center">
+                    <span class="font-serif text-2xl md:text-[1.75rem] font-bold text-brand-dark lowercase tracking-wider leading-none">beyondary</span>
+                    <div class="flex items-center w-full mt-1 gap-2">
+                        <div class="h-[2px] bg-brand-dark flex-grow"></div>
+                        <span class="text-[0.6rem] md:text-[0.65rem] font-bold text-brand-dark tracking-widest uppercase">Thai Craft</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- เมนูหลัก (Desktop) -->
+            <nav class="hidden lg:flex space-x-8 text-sm font-medium uppercase tracking-wider text-brand-dark/80">
+                <a href="index.html" class="hover:text-brand-gold transition">หน้าแรก</a>
+                <a href="#shop" class="hover:text-brand-gold transition">สินค้าทั้งหมด</a>
+                <a href="#categories" class="hover:text-brand-gold transition">หมวดหมู่</a>
+                <a href="#artisans" class="hover:text-brand-gold transition">เรื่องราวของเรา</a>
+                <a href="#contact" class="hover:text-brand-gold transition">ติดต่อเรา</a>
+            </nav>
+
+            <!-- ไอคอนฝั่งขวา (ค้นหา, สกุลเงิน/ภาษา, ตะกร้า) -->
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <!-- ค้นหา -->
+                <button class="text-brand-dark/80 hover:text-brand-gold transition hidden md:block">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                </button>
+                
+                <!-- เลือกภาษาและสกุลเงิน -->
+                <div class="relative group hidden sm:block">
+                    <button class="flex items-center space-x-1 text-sm text-brand-dark/80 hover:text-brand-gold transition">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>EN / USD</span>
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </button>
+                    <!-- Dropdown ซ่อนอยู่ จะแสดงเมื่อเอาเมาส์ชี้ -->
+                    <div class="absolute right-0 mt-2 w-32 bg-white border border-[#EAE5DA] shadow-lg rounded opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 z-50">
+                        <a href="#" class="block px-4 py-2 text-sm text-brand-dark hover:bg-brand-light">TH / THB</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-brand-dark hover:bg-brand-light bg-brand-light/50">EN / USD</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-brand-dark hover:bg-brand-light">EN / EUR</a>
+                    </div>
+                </div>
+
+                <!-- ตะกร้าสินค้า -->
+                <button class="text-brand-dark/80 hover:text-brand-gold transition relative flex items-center" onclick="openCart()">
+                    <i class="fa-solid fa-cart-shopping text-xl"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-brand-gold text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- เมนูมือถือ -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-light border-t border-[#EAE5DA] px-4 py-4 space-y-4 shadow-inner">
+            <a href="index.html" class="block text-brand-dark font-medium">หน้าแรก</a>
+            <a href="#shop" class="block text-brand-dark font-medium">สินค้าทั้งหมด</a>
+            <a href="#categories" class="block text-brand-dark font-medium">หมวดหมู่</a>
+            <a href="#artisans" class="block text-brand-dark font-medium">เรื่องราวของเรา</a>
+            <a href="#contact" class="block text-brand-dark font-medium">ติดต่อเรา</a>
+            <div class="border-t border-[#EAE5DA] pt-4 flex items-center justify-between">
+                <span class="text-brand-dark text-sm">ภาษา / สกุลเงิน:</span>
+                <select class="bg-white border border-[#EAE5DA] text-brand-dark text-sm p-1 rounded outline-none">
+                    <option>EN / USD</option>
+                    <option>TH / THB</option>
+                    <option>EN / EUR</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- ส่วนฮีโร่ (Hero Section) -->
+    <section class="relative w-full h-[60vh] md:h-[80vh] flex items-center justify-center bg-brand-dark">
+        <!-- พื้นหลังรูปภาพ -->
+        <div class="absolute inset-0 bg-brand-dark">
+            <img src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=2000&auto=format&fit=crop" alt="" class="w-full h-full object-cover opacity-50 mix-blend-overlay">
+        </div>
+        
+        <!-- เนื้อหาบนภาพ -->
+        <div class="relative z-10 text-center px-4 max-w-3xl mx-auto mt-8 md:mt-0">
+            <span class="text-brand-gold font-sans tracking-widest uppercase text-sm md:text-base font-semibold mb-4 block">Crafted with Soul, Shipped Globally</span>
+            <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl text-white font-bold mb-6 leading-tight">
+                ศิลปะแห่งสยาม <br> สู่ไลฟ์สไตล์ระดับโลก
+            </h1>
+            <p class="text-brand-light/90 text-base md:text-lg mb-8 font-light max-w-xl mx-auto">
+                สัมผัสความประณีตของงานคราฟต์ไทยที่ผสานภูมิปัญญาดั้งเดิมเข้ากับดีไซน์ร่วมสมัย คัดสรรอย่างพิถีพิถัน พร้อมจัดส่งถึงมือคุณทั่วโลก
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#shop" class="bg-brand-gold hover:bg-[#A07644] text-white px-8 py-3 rounded-none font-medium tracking-wide transition duration-300">
+                    เลือกชมสินค้าทั้งหมด
+                </a>
+                <a href="#artisans" class="bg-transparent border border-brand-light text-brand-light hover:bg-brand-light hover:text-brand-dark px-8 py-3 rounded-none font-medium tracking-wide transition duration-300">
+                    รู้จักช่างฝีมือของเรา
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- จุดเด่นบริการ (Trust Badges) -->
+    <section class="bg-white py-10 border-b border-[#EAE5DA]">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-[#EAE5DA]">
+                <div class="flex flex-col items-center p-4">
+                    <i class="fa-solid fa-earth-americas text-3xl text-brand-gold mb-3"></i>
+                    <h3 class="text-lg font-semibold text-brand-dark mb-1">จัดส่งทั่วโลก (Worldwide Shipping)</h3>
+                    <p class="text-brand-dark/60 text-sm">บริการจัดส่งที่รวดเร็วและปลอดภัย ผ่านพาร์ทเนอร์ขนส่งระดับสากล</p>
+                </div>
+                <div class="flex flex-col items-center p-4">
+                    <i class="fa-solid fa-hands-holding-circle text-3xl text-brand-gold mb-3"></i>
+                    <h3 class="text-lg font-semibold text-brand-dark mb-1">งานฝีมือแท้ (100% Authentic)</h3>
+                    <p class="text-brand-dark/60 text-sm">สินค้าทุกชิ้นประดิษฐ์ด้วยมือ สนับสนุนรายได้สู่ชุมชนโดยตรง</p>
+                </div>
+                <div class="flex flex-col items-center p-4">
+                    <i class="fa-solid fa-shield-halved text-3xl text-brand-gold mb-3"></i>
+                    <h3 class="text-lg font-semibold text-brand-dark mb-1">ชำระเงินปลอดภัย (Secure Payment)</h3>
+                    <p class="text-brand-dark/60 text-sm">รองรับบัตรเครดิตชั้นนำ และ PayPal ปลอดภัย 100%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- หมวดหมู่สินค้า (Categories) -->
+    <section id="categories" class="py-16 md:py-24 container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="font-serif text-3xl md:text-4xl text-brand-dark font-bold mb-3">หมวดหมู่สินค้า Beyondary</h2>
+            <div class="w-16 h-1 bg-brand-gold mx-auto"></div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <!-- หมวดหมู่ 1 -->
+            <a href="#shop" class="group relative h-64 md:h-80 overflow-hidden block rounded-sm">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1000&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-brand-dark/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6">
+                    <h3 class="text-white font-serif text-xl md:text-2xl mb-1">Home & Living</h3>
+                    <span class="text-brand-gold text-sm group-hover:underline underline-offset-4">ของตกแต่งบ้าน <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></span>
+                </div>
+            </a>
+            
+            <!-- หมวดหมู่ 2 -->
+            <a href="#shop" class="group relative h-64 md:h-80 overflow-hidden block rounded-sm">
+                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=1000&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-brand-dark/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6">
+                    <h3 class="text-white font-serif text-xl md:text-2xl mb-1">Fashion</h3>
+                    <span class="text-brand-gold text-sm group-hover:underline underline-offset-4">แฟชั่นและเครื่องประดับ <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></span>
+                </div>
+            </a>
+
+            <!-- หมวดหมู่ 3 -->
+            <a href="#shop" class="group relative h-64 md:h-80 overflow-hidden block rounded-sm">
+                <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1000&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-brand-dark/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6">
+                    <h3 class="text-white font-serif text-xl md:text-2xl mb-1">Wellness & Spa</h3>
+                    <span class="text-brand-gold text-sm group-hover:underline underline-offset-4">สปาและความงาม <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></span>
+                </div>
+            </a>
+
+            <!-- หมวดหมู่ 4 -->
+            <a href="#shop" class="group relative h-64 md:h-80 overflow-hidden block rounded-sm">
+                <img src="https://images.unsplash.com/photo-1544531585-9847b68c8c86?q=80&w=1000&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-brand-dark/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6">
+                    <h3 class="text-white font-serif text-xl md:text-2xl mb-1">Art & Collectibles</h3>
+                    <span class="text-brand-gold text-sm group-hover:underline underline-offset-4">ศิลปะและของสะสม <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- สินค้าแนะนำ (Featured Products) -->
+    <section id="shop" class="bg-white py-16 md:py-24 border-y border-[#EAE5DA]">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="font-serif text-3xl md:text-4xl text-brand-dark font-bold mb-3">คอลเลกชันใหม่ล่าสุด</h2>
+                    <div class="w-16 h-1 bg-brand-gold"></div>
+                </div>
+                <a href="#" class="hidden md:inline-block text-brand-earth hover:text-brand-dark font-medium border-b border-brand-earth hover:border-brand-dark pb-1 transition">
+                    ดูสินค้าทั้งหมด
+                </a>
+            </div>
+
+            <!-- Grid สินค้า -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- สินค้าชิ้นที่ 1 -->
+                <div class="product-card group">
+                    <div class="relative overflow-hidden-image aspect-[4/5] mb-4 bg-brand-light rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=800&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ป้าย New -->
+                        <span class="absolute top-3 left-3 bg-brand-light text-brand-dark text-xs font-bold px-2 py-1 uppercase tracking-wide shadow-sm">New</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button onclick="addToCart()" class="w-full bg-brand-dark/95 backdrop-blur-sm text-brand-light py-3 font-medium hover:bg-brand-gold transition flex justify-center items-center gap-2 shadow-lg rounded-sm">
+                                <i class="fa-solid fa-cart-plus"></i> เพิ่มลงตะกร้า
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-brand-earth uppercase tracking-widest mb-1">Fashion</p>
+                        <h3 class="text-lg font-medium text-brand-dark mb-2 group-hover:text-brand-gold transition">กระเป๋าสานผักตบชวา ลายไทยประยุกต์</h3>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-brand-dark font-bold text-lg">$45.00</span>
+                            <span class="text-brand-dark/40 text-sm line-through">฿1,590</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- สินค้าชิ้นที่ 2 -->
+                <div class="product-card group">
+                    <div class="relative overflow-hidden-image aspect-[4/5] mb-4 bg-brand-light rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1605007507421-c45ec590892c?q=80&w=800&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button onclick="addToCart()" class="w-full bg-brand-dark/95 backdrop-blur-sm text-brand-light py-3 font-medium hover:bg-brand-gold transition flex justify-center items-center gap-2 shadow-lg rounded-sm">
+                                <i class="fa-solid fa-cart-plus"></i> เพิ่มลงตะกร้า
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-brand-earth uppercase tracking-widest mb-1">Fashion</p>
+                        <h3 class="text-lg font-medium text-brand-dark mb-2 group-hover:text-brand-gold transition">ผ้าพันคอไหมย้อมครามธรรมชาติ</h3>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-brand-dark font-bold text-lg">$38.00</span>
+                            <span class="text-brand-dark/40 text-sm line-through">฿1,350</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- สินค้าชิ้นที่ 3 -->
+                <div class="product-card group">
+                    <div class="relative overflow-hidden-image aspect-[4/5] mb-4 bg-brand-light rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 left-3 bg-brand-gold text-white text-xs font-bold px-2 py-1 uppercase tracking-wide shadow-sm">Best Seller</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button onclick="addToCart()" class="w-full bg-brand-dark/95 backdrop-blur-sm text-brand-light py-3 font-medium hover:bg-brand-gold transition flex justify-center items-center gap-2 shadow-lg rounded-sm">
+                                <i class="fa-solid fa-cart-plus"></i> เพิ่มลงตะกร้า
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-brand-earth uppercase tracking-widest mb-1">Home & Living</p>
+                        <h3 class="text-lg font-medium text-brand-dark mb-2 group-hover:text-brand-gold transition">ชุดจานเซรามิก ลายช้างเขียนมือ</h3>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-brand-dark font-bold text-lg">$65.00</span>
+                            <span class="text-brand-dark/40 text-sm line-through">฿2,290</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- สินค้าชิ้นที่ 4 -->
+                <div class="product-card group">
+                    <div class="relative overflow-hidden-image aspect-[4/5] mb-4 bg-brand-light rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1611077544662-8515ce4020a1?q=80&w=800&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button onclick="addToCart()" class="w-full bg-brand-dark/95 backdrop-blur-sm text-brand-light py-3 font-medium hover:bg-brand-gold transition flex justify-center items-center gap-2 shadow-lg rounded-sm">
+                                <i class="fa-solid fa-cart-plus"></i> เพิ่มลงตะกร้า
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-brand-earth uppercase tracking-widest mb-1">Home & Living</p>
+                        <h3 class="text-lg font-medium text-brand-dark mb-2 group-hover:text-brand-gold transition">กล่องไม้สักเครื่องประดับ ลายพิกุล</h3>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-brand-dark font-bold text-lg">$85.00</span>
+                            <span class="text-brand-dark/40 text-sm line-through">฿2,990</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-10 text-center md:hidden">
+                <a href="#" class="inline-block text-brand-earth border-b border-brand-earth pb-1 font-medium">ดูสินค้าทั้งหมด</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ส่วนบอกเล่าเรื่องราว (Our Story) -->
+    <section id="artisans" class="py-16 md:py-24 bg-brand-light">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="w-full lg:w-1/2 aspect-square lg:aspect-[4/3] bg-brand-dark relative overflow-hidden shadow-xl rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1533626154371-12c85b7b68db?q=80&w=1000&auto=format&fit=crop" alt="" class="w-full h-full object-cover hover:scale-105 transition duration-700 opacity-90">
+                </div>
+                <div class="w-full lg:w-1/2 lg:pl-10">
+                    <h2 class="font-serif text-3xl md:text-5xl text-brand-dark font-bold mb-6 leading-tight">
+                        เบื้องหลังทุกชิ้นงาน <br> คือ <span class="text-brand-gold italic">จิตวิญญาณแห่งชุมชน</span>
+                    </h2>
+                    <p class="text-brand-dark/70 mb-6 text-lg leading-relaxed">
+                        Beyondary ไม่ได้เป็นเพียงแบรนด์สินค้า แต่เราคือสะพานเชื่อมระหว่างไลฟ์สไตล์ระดับโลกและช่างฝีมือผู้เปี่ยมพรสวรรค์จากทั่วประเทศไทย สินค้าทุกชิ้นใช้เวลา ความอดทน และทักษะที่นำภูมิปัญญาดั้งเดิมมาก้าวข้ามขีดจำกัดสู่งานดีไซน์ร่วมสมัย
+                    </p>
+                    <p class="text-brand-dark/70 mb-8 leading-relaxed">
+                        เมื่อคุณซื้อสินค้าจากเรา คุณกำลังช่วยสร้างรายได้ที่ยั่งยืนให้แก่ชุมชน สนับสนุนช่างฝีมือท้องถิ่น และช่วยส่งผ่านมรดกทางวัฒนธรรมไทยให้ไปไกลสู่สากล
+                    </p>
+                    <a href="#about" class="inline-flex items-center font-medium text-brand-dark hover:text-brand-gold transition group">
+                        อ่านเรื่องราวของ Beyondary 
+                        <i class="fa-solid fa-arrow-right-long ml-2 transform group-hover:translate-x-2 transition"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- จดหมายข่าว (Newsletter) -->
+    <section class="bg-brand-dark py-16 border-y border-[#2A1D13]">
+        <div class="container mx-auto px-4 text-center max-w-2xl">
+            <i class="fa-regular fa-envelope text-4xl text-brand-gold mb-4"></i>
+            <h2 class="font-serif text-3xl text-brand-light font-bold mb-4">รับข่าวสารและโปรโมชั่นพิเศษ</h2>
+            <p class="text-brand-light/70 mb-8">สมัครรับจดหมายข่าวเพื่อรับส่วนลด 10% สำหรับการสั่งซื้อครั้งแรก และอัปเดตคอลเลกชันงานคราฟต์ใหม่ๆ ก่อนใคร</p>
+            <form class="flex flex-col sm:flex-row gap-2 justify-center">
+                <input type="email" placeholder="Your email address" class="px-6 py-3 bg-brand-light/10 border border-brand-light/20 text-brand-light placeholder-brand-light/50 focus:outline-none focus:border-brand-gold w-full sm:w-2/3 rounded-sm">
+                <button type="submit" class="px-8 py-3 bg-brand-gold hover:bg-[#A07644] text-white font-medium transition whitespace-nowrap rounded-sm">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ส่วนท้ายเว็บ (Footer) -->
+    <footer id="contact" class="bg-brand-light pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <!-- ข้อมูลร้าน -->
+                <div>
+                    <!-- โลโก้ใน Footer (พร้อมระบบ Fallback) -->
+                    <a href="index.html" class="inline-block mb-4">
+                        <img src="1000021903.png" 
+                             alt="Beyondary Thai Craft Logo" 
+                             class="h-10 md:h-12 w-auto object-contain blend-multiply"
+                             onerror="this.onerror=null; this.style.display='none'; document.getElementById('fallback-logo-footer').style.display='flex';">
+                        
+                        <div id="fallback-logo-footer" class="hidden flex-col items-center opacity-90">
+                            <span class="font-serif text-[1.5rem] font-bold text-brand-dark lowercase tracking-wider leading-none">beyondary</span>
+                            <div class="flex items-center w-full mt-1 gap-2">
+                                <div class="h-[2px] bg-brand-dark flex-grow"></div>
+                                <span class="text-[0.55rem] font-bold text-brand-dark tracking-widest uppercase">Thai Craft</span>
+                            </div>
+                        </div>
+                    </a>
+                    <p class="text-brand-dark/70 text-sm mb-6 leading-relaxed">
+                        ส่งมอบงานคราฟต์ไทยและไลฟ์สไตล์คุณภาพเยี่ยมสู่บ้านคุณทั่วโลก พร้อมรับประกันความพอใจและคุณภาพงานฝีมือแท้
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition"><i class="fa-brands fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+
+                <!-- ลิงก์ร้านค้า -->
+                <div>
+                    <h4 class="font-medium text-brand-dark mb-5 uppercase tracking-wide text-sm">ร้านค้า (Shop)</h4>
+                    <ul class="space-y-3 text-sm text-brand-dark/70">
+                        <li><a href="#shop" class="hover:text-brand-gold transition">สินค้าเข้าใหม่ (New Arrivals)</a></li>
+                        <li><a href="#categories" class="hover:text-brand-gold transition">ของตกแต่งบ้าน (Home & Living)</a></li>
+                        <li><a href="#categories" class="hover:text-brand-gold transition">แฟชั่น (Fashion)</a></li>
+                        <li><a href="#categories" class="hover:text-brand-gold transition">สปาและความงาม (Wellness & Spa)</a></li>
+                        <li><a href="#categories" class="hover:text-brand-gold transition">ศิลปะและของสะสม (Art & Collectibles)</a></li>
+                    </ul>
+                </div>
+
+                <!-- การช่วยเหลือ -->
+                <div>
+                    <h4 class="font-medium text-brand-dark mb-5 uppercase tracking-wide text-sm">ช่วยเหลือ (Support)</h4>
+                    <ul class="space-y-3 text-sm text-brand-dark/70">
+                        <li><a href="#faq" class="hover:text-brand-gold transition">คำถามที่พบบ่อย (FAQ)</a></li>
+                        <li><a href="#shipping" class="hover:text-brand-gold transition">การจัดส่งทั่วโลก (Shipping Info)</a></li>
+                        <li><a href="#returns" class="hover:text-brand-gold transition">นโยบายการคืนสินค้า (Returns)</a></li>
+                        <li><a href="#contact" class="hover:text-brand-gold transition">ติดต่อเรา (Contact Us)</a></li>
+                    </ul>
+                </div>
+
+                <!-- การชำระเงินที่รองรับ -->
+                <div>
+                    <h4 class="font-medium text-brand-dark mb-5 uppercase tracking-wide text-sm">ชำระเงินอย่างปลอดภัย</h4>
+                    <p class="text-sm text-brand-dark/70 mb-4">เรารองรับการชำระเงินระดับสากล สะดวกและปลอดภัย 100%</p>
+                    <div class="flex flex-wrap gap-2 text-2xl text-brand-dark/40">
+                        <i class="fa-brands fa-cc-visa hover:text-[#1434CB] transition cursor-pointer"></i>
+                        <i class="fa-brands fa-cc-mastercard hover:text-[#EB001B] transition cursor-pointer"></i>
+                        <i class="fa-brands fa-cc-paypal hover:text-[#003087] transition cursor-pointer"></i>
+                        <i class="fa-brands fa-cc-amex hover:text-[#2E77BB] transition cursor-pointer"></i>
+                        <i class="fa-brands fa-alipay hover:text-[#00A1E9] transition cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-[#EAE5DA] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-brand-dark/50">
+                <p>&copy; 2026 Beyondary. All Rights Reserved. Crafted with Soul, Shipped Globally.</p>
+                <div class="flex space-x-4">
+                    <a href="#privacy" class="hover:text-brand-dark">Privacy Policy</a>
+                    <a href="#terms" class="hover:text-brand-dark">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- แจ้งเตือนเมื่อเพิ่มสินค้าลงตะกร้า (Toast Notification) -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-brand-light border border-[#EAE5DA] border-l-4 border-l-brand-gold shadow-xl p-4 rounded-sm transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+        <i class="fa-solid fa-check-circle text-brand-gold text-xl"></i>
+        <div>
+            <h4 class="font-medium text-sm text-brand-dark">เพิ่มสินค้าลงตะกร้าแล้ว</h4>
+            <p class="text-xs text-brand-dark/60">ตะกร้าของคุณได้รับการอัปเดต</p>
+        </div>
+    </div>
+
+    <!-- สคริปต์การทำงานเบื้องต้น -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        let cartCount = 0;
+        function addToCart() {
+            cartCount++;
+            const countElement = document.getElementById('cart-count');
+            countElement.innerText = cartCount;
+            
+            countElement.classList.add('scale-150');
+            setTimeout(() => {
+                countElement.classList.remove('scale-150');
+            }, 200);
+
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function openCart() {
+            if(cartCount === 0) {
+                alert("ตะกร้าสินค้าของคุณยังว่างเปล่า (Your cart is empty)");
+            } else {
+                alert(`คุณมีสินค้าในตะกร้า ${cartCount} ชิ้น กำลังพาไปหน้า Checkout...`);
+            }
+        }
+    </script>
+</body>
+</html>
