@@ -202,7 +202,7 @@ components/
 
 - [x] Override: `button`, `flash-group`, `form/control-group/*`, `datagrid/table`, `modal/*`
 - [x] CSS: `.primary-button`, `.secondary-button`, status labels, datagrid, peer-checked gold
-- [x] Form inputs — border/focus โทน Beyondary
+- [x] Form inputs — border/focus โทน Beyondary (มาตรฐาน: `.cursor/rules/admin-theme.mdc` § Form fields — focus ใช้ `ring-2` + `admin-primary/30` เท่านั้น ไม่เปลี่ยน border ตอน focus)
 
 **ทดสอบ (มือ):**
 

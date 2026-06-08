@@ -19,7 +19,7 @@
                 name="{{ $name }}"
                 v-bind="field"
                 :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
-                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary focus:ring-1 focus:ring-admin-primary/20']) }}
+                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
             />
         </v-field>
 
@@ -32,7 +32,7 @@
             name="{{ $name }}"
         >
             <div
-                class="flex w-full items-center overflow-hidden rounded-md border border-admin-border bg-admin-card text-sm text-admin-text transition-all hover:border-admin-muted focus-within:border-admin-primary focus-within:ring-1 focus-within:ring-admin-primary/20"
+                class="flex w-full items-center overflow-hidden rounded-md border border-admin-border bg-admin-card text-sm text-admin-text transition-all hover:border-admin-muted focus-within:border-admin-border focus-within:outline-none focus-within:ring-2 focus-within:ring-admin-primary/30"
                 :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
             >
                 @if (isset($currency))
@@ -66,7 +66,7 @@
                 type="{{ $type }}"
                 v-bind="{ name: field.name }"
                 :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
-                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all file:bg-admin-surface file:text-admin-text hover:border-admin-muted focus:border-admin-primary focus:ring-1 focus:ring-admin-primary/20']) }}
+                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all file:bg-admin-surface file:text-admin-text hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
                 @change="handleChange"
                 @blur="handleBlur"
             />
@@ -84,7 +84,7 @@
                 type="{{ $type }}"
                 :class="[errors.length ? 'border border-red-500' : '']"
                 v-bind="field"
-                {{ $attributes->except(['value'])->merge(['class' => 'w-full appearance-none rounded-md border border-admin-border bg-admin-card text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary']) }}
+                {{ $attributes->except(['value'])->merge(['class' => 'w-full appearance-none rounded-md border border-admin-border bg-admin-card text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
             >
         </v-field>
         @break
@@ -100,7 +100,7 @@
                 name="{{ $name }}"
                 v-bind="field"
                 :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
-                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary focus:ring-1 focus:ring-admin-primary/20']) }}
+                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
             >
             </textarea>
 
@@ -127,7 +127,7 @@
                     name="{{ $name }}"
                     v-bind="field"
                     :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
-                    {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary focus:ring-1 focus:ring-admin-primary/20']) }}
+                    {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
                     autocomplete="off"
                 />
             </x-admin::flat-picker.date>
@@ -146,7 +146,7 @@
                     name="{{ $name }}"
                     v-bind="field"
                     :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
-                    {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary focus:ring-1 focus:ring-admin-primary/20']) }}
+                    {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
                     autocomplete="off"
                 >
             </x-admin::flat-picker.datetime>
@@ -165,7 +165,7 @@
                     name="{{ $name }}"
                     v-bind="field"
                     :class="[errors.length ? 'border !border-red-600 hover:border-red-600' : '']"
-                    {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'flex w-full min-h-[39px] rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary focus:ring-1 focus:ring-admin-primary/20']) }}
+                    {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'flex w-full min-h-[39px] rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
                     autocomplete="off"
                 >
             </x-admin::flat-picker.time>
@@ -182,7 +182,7 @@
                 name="{{ $name }}"
                 v-bind="field"
                 :class="[errors.length ? 'border border-red-500' : '']"
-                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'custom-select w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm font-normal text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary']) }}
+                {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label'])->merge(['class' => 'custom-select w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm font-normal text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
             >
                 {{ $slot }}
             </select>
@@ -195,7 +195,7 @@
             as="select"
             v-slot="{ value }"
             :class="[errors && errors['{{ $name }}'] ? 'border !border-red-600 hover:border-red-600' : '']"
-            {{ $attributes->except([])->merge(['class' => 'flex w-full flex-col rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm font-normal text-admin-text transition-all hover:border-admin-muted focus:border-admin-primary']) }}
+            {{ $attributes->except([])->merge(['class' => 'flex w-full flex-col rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm font-normal text-admin-text transition-all hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30']) }}
             name="{{ $name }}"
             multiple
         >

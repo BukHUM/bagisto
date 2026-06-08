@@ -594,8 +594,61 @@
         display: none;
     }
 
+    .beyondary-admin-sidebar .sidebar-nav-link__icon {
+        @apply inline-flex shrink-0 items-center justify-center text-lg leading-none;
+    }
+
     .beyondary-admin-sidebar .sidebar-nav-link {
         @apply text-admin-sidebar-text;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-scroll {
+        @apply overflow-visible px-1.5;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar {
+        @apply overflow-visible;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-menu-item {
+        @apply relative;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-submenu-group {
+        @apply overflow-visible;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-nav-link {
+        @apply justify-center gap-0 px-0 py-2;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-nav-link__icon {
+        @apply h-9 w-9;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-nav-link__label,
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-nav-link__chevron {
+        @apply hidden;
+    }
+
+    .group\/container.sidebar-collapsed .beyondary-admin-sidebar .sidebar-submenu-panel {
+        @apply hidden;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link {
+        @apply justify-start;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link__label {
+        @apply block;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link__chevron {
+        @apply inline-block;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link__icon {
+        @apply inline-flex h-9 w-9 shrink-0 items-center justify-center;
     }
 
     .beyondary-admin-sidebar .sidebar-nav-link:hover {
@@ -611,16 +664,18 @@
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-group {
-        @apply mb-0.5 overflow-hidden rounded-md;
+        @apply m-0 overflow-hidden rounded-md;
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-group--expanded .sidebar-nav-link--open {
-        @apply rounded-b-none;
+        @apply rounded-b-none transition-[border-radius] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-panel {
-        @apply grid overflow-hidden transition-[grid-template-rows] duration-300 ease-in-out;
+        display: grid;
         grid-template-rows: 0fr;
+        overflow: hidden;
+        transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-panel--expanded {
@@ -628,27 +683,51 @@
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-panel__inner {
-        @apply min-h-0 border-t border-admin-sidebar-active/20 bg-admin-sidebar-submenu px-2 pb-2 pt-1.5 opacity-0 transition-opacity duration-300 ease-in-out;
+        @apply min-h-0 overflow-hidden border-t border-transparent bg-transparent pl-3 pr-2 pt-0 pb-0;
+        transition:
+            border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            padding 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-panel:not(.sidebar-submenu-panel--expanded) .sidebar-submenu-panel__inner {
+        transition:
+            border-color 0s 0.28s,
+            background-color 0s 0.28s,
+            padding 0s 0.28s;
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-panel--expanded .sidebar-submenu-panel__inner {
-        @apply opacity-100;
+        @apply border-admin-sidebar-active/20 bg-admin-sidebar-submenu pb-2 pt-1.5;
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-link {
-        @apply block rounded-md px-2.5 py-1.5 text-sm text-admin-sidebar-submenu-text transition-colors duration-200;
+        @apply mx-1 flex items-center gap-2 rounded-md border-l-2 border-transparent py-1.5 pl-2 pr-2 text-sm text-admin-sidebar-submenu-text transition-all duration-200;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-link__icon {
+        @apply w-4 shrink-0 text-center text-base leading-none;
+        color: #8f8274;
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-link:hover {
-        @apply bg-admin-sidebar-hover text-admin-sidebar-text;
+        @apply border-admin-sidebar-active/25 bg-admin-sidebar-hover/60 text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-link:hover .sidebar-submenu-link__icon {
+        color: #c9bfb0;
     }
 
     .beyondary-admin-sidebar .sidebar-submenu-link--active {
-        @apply bg-admin-sidebar-active/35 font-medium text-admin-sidebar-text;
+        @apply border-admin-sidebar-active bg-admin-sidebar-hover/80 font-medium text-admin-sidebar-text;
     }
 
-    .beyondary-admin-sidebar [class^="icon-"],
-    .beyondary-admin-sidebar [class*=" icon-"] {
+    .beyondary-admin-sidebar .sidebar-submenu-link--active .sidebar-submenu-link__icon {
+        @apply text-admin-sidebar-active;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link [class^="icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link [class*=" icon-"] {
         color: #d4c9bc;
     }
 
@@ -664,6 +743,163 @@
     .beyondary-admin-sidebar .sidebar-nav-link--active:hover [class^="icon-"],
     .beyondary-admin-sidebar .sidebar-nav-link--active:hover [class*=" icon-"] {
         color: #3a2618;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout {
+        @apply pointer-events-none invisible fixed z-[1101] hidden min-w-[210px] rounded-lg border border-white/10 bg-admin-sidebar-submenu py-2 opacity-0 shadow-xl transition-[opacity,visibility] duration-150 ltr:left-[70px] rtl:right-[70px];
+    }
+
+    .group\/container.sidebar-not-collapsed .beyondary-admin-sidebar .sidebar-collapsed-flyout {
+        @apply !hidden;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout--visible {
+        @apply pointer-events-auto visible block opacity-100;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout__title {
+        @apply border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-admin-sidebar-muted;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout__link {
+        @apply mx-1 flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-admin-sidebar-submenu-text transition-colors duration-200 hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout__link--active {
+        @apply bg-admin-sidebar-hover/80 font-medium text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout__icon {
+        @apply inline-flex h-4 w-4 shrink-0 items-center justify-center text-sm leading-none;
+        color: #8f8274;
+    }
+
+    .beyondary-admin-sidebar .sidebar-collapsed-flyout__link--active .sidebar-collapsed-flyout__icon {
+        @apply text-admin-sidebar-active;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link {
+        @apply text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link:hover {
+        @apply bg-admin-sidebar-hover text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link--open {
+        @apply bg-admin-sidebar-hover font-medium text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link--active {
+        @apply bg-admin-sidebar-active font-semibold text-admin-text shadow-sm;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link [class^="icon-"],
+    .beyondary-admin-drawer-nav .sidebar-nav-link [class*=" icon-"] {
+        color: #d4c9bc;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link--active [class^="icon-"],
+    .beyondary-admin-drawer-nav .sidebar-nav-link--active [class*=" icon-"] {
+        color: #3a2618;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-group {
+        @apply m-0 overflow-hidden rounded-md;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-menu-item {
+        @apply m-0 p-0;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-nav-link {
+        @apply m-0;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-group--expanded .sidebar-nav-link--open {
+        @apply rounded-b-none;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-panel {
+        display: grid;
+        grid-template-rows: 0fr;
+        overflow: hidden;
+        transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-panel--expanded {
+        grid-template-rows: 1fr;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-panel__inner {
+        @apply min-h-0 overflow-hidden border-t border-transparent bg-transparent pl-3 pr-2 pt-0 pb-0;
+        transition:
+            border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            padding 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-panel:not(.sidebar-submenu-panel--expanded) .sidebar-submenu-panel__inner {
+        transition:
+            border-color 0s 0.28s,
+            background-color 0s 0.28s,
+            padding 0s 0.28s;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-panel--expanded .sidebar-submenu-panel__inner {
+        @apply border-admin-sidebar-active/20 bg-admin-sidebar-submenu pb-2 pt-1.5;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-link {
+        @apply mx-1 flex items-center gap-2 rounded-md border-l-2 border-transparent py-1.5 pl-2 pr-2 text-sm text-admin-sidebar-submenu-text transition-all duration-200;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-link__icon {
+        @apply w-4 shrink-0 text-center text-base leading-none;
+        color: #8f8274;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-link:hover {
+        @apply border-admin-sidebar-active/25 bg-admin-sidebar-hover/60 text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-link:hover .sidebar-submenu-link__icon {
+        color: #c9bfb0;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-link--active {
+        @apply border-admin-sidebar-active bg-admin-sidebar-hover/80 font-medium text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-submenu-link--active .sidebar-submenu-link__icon {
+        @apply text-admin-sidebar-active;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-scroll {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .beyondary-admin-drawer-nav .sidebar-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .beyondary-admin-mobile-sidebar-drawer .overflow-auto,
+    .beyondary-admin-mobile-sidebar-drawer .overflow-y-auto {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .beyondary-admin-mobile-sidebar-drawer .overflow-auto::-webkit-scrollbar,
+    .beyondary-admin-mobile-sidebar-drawer .overflow-y-auto::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (max-width: 640px) {
+        .beyondary-admin-mobile-sidebar-drawer .fixed.z-\[10002\] {
+            width: min(280px, 88vw) !important;
+            max-width: min(280px, 88vw) !important;
+        }
     }
 
     .text-blue-600 {

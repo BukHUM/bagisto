@@ -73,5 +73,9 @@ module.exports = {
         {
             pattern: /text-(blue|gray)-/,
         },
+        "focus:ring-2",
+        "focus:ring-admin-primary/30",
+        "focus-within:ring-2",
+        "focus-within:ring-admin-primary/30",
     ],
 };

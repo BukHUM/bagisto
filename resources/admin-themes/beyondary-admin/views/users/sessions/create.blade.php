@@ -1,46 +1,70 @@
 <x-admin::layouts.anonymous>
-    <!-- Page Title -->
     <x-slot:title>
         @lang('admin::app.users.sessions.title')
     </x-slot>
 
-    <div class="flex h-[100vh] items-center justify-center">
-        <div class="flex flex-col items-center gap-5">
-            <!-- Logo -->            
-            @if ($logo = core()->getConfigData('general.design.admin_logo.logo_image'))
-                <img
-                    class="h-10 w-[110px]"
-                    src="{{ Storage::url($logo) }}"
-                    alt="{{ config('app.name') }}"
-                />
-            @else
-                <img
-                    class="w-max" 
-                    src="{{ bagisto_asset('images/logo.svg') }}"
-                    alt="{{ config('app.name') }}"
-                />
-            @endif
+    @push('meta')
+        <meta name="robots" content="noindex, nofollow">
+    @endpush
 
-            <div class="box-shadow flex min-w-[300px] flex-col rounded-lg bg-admin-card ">
-                <!-- Login Form -->
+    <div class="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
+        <div
+            class="pointer-events-none absolute inset-0 bg-admin-surface"
+            aria-hidden="true"
+        >
+            <div class="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-admin-primary/5 blur-3xl"></div>
+            <div class="absolute -bottom-28 -right-20 h-96 w-96 rounded-full bg-admin-primary/[0.07] blur-3xl"></div>
+        </div>
+
+        <div class="relative z-10 mx-auto flex w-full max-w-sm flex-col items-center gap-8">
+            <div class="flex flex-col items-center gap-3 text-center">
+                @if ($logo = core()->getConfigData('general.design.admin_logo.logo_image'))
+                    <img
+                        class="h-12 w-auto max-w-[200px] object-contain"
+                        src="{{ Storage::url($logo) }}"
+                        alt="{{ config('app.name') }}"
+                        width="200"
+                        height="48"
+                        decoding="async"
+                    />
+                @else
+                    <img
+                        class="h-12 w-auto max-w-[220px] object-contain"
+                        src="{{ bagisto_asset('images/logo.svg') }}"
+                        alt="{{ config('app.name') }}"
+                        width="220"
+                        height="48"
+                        decoding="async"
+                    />
+                @endif
+
+                <p class="font-sans text-[0.65rem] font-medium uppercase tracking-[0.35em] text-admin-muted">
+                    Thai Craft
+                </p>
+            </div>
+
+            <div class="w-full overflow-hidden rounded-xl border border-admin-border bg-admin-card shadow-lg">
                 <x-admin::form :action="route('admin.session.store')">
-                    <p class="p-4 font-display text-2xl font-semibold text-admin-text">
-                        @lang('admin::app.users.sessions.title')
-                    </p>
+                    <div class="border-b border-admin-border bg-admin-primary/[0.04] px-6 py-5">
+                        <h1 class="font-display text-2xl font-semibold text-admin-text">
+                            @lang('admin::app.users.sessions.title')
+                        </h1>
+                    </div>
 
-                    <div class="border-y p-4 border-admin-border">
-                        <!-- Email -->
+                    <div class="flex flex-col gap-5 p-6">
                         <x-admin::form.control-group>
-                            <x-admin::form.control-group.label class="required">
+                            <x-admin::form.control-group.label class="required text-admin-text">
                                 @lang('admin::app.users.sessions.email')
                             </x-admin::form.control-group.label>
 
-                            <x-admin::form.control-group.control 
-                                type="email" 
-                                class="w-[254px] max-w-full" 
+                            <x-admin::form.control-group.control
+                                type="email"
+                                class="bg-white placeholder:text-admin-muted/60"
                                 id="email"
-                                name="email" 
-                                rules="required|email" 
+                                name="email"
+                                rules="required|email"
+                                autocomplete="username"
+                                maxlength="255"
                                 :label="trans('admin::app.users.sessions.email')"
                                 :placeholder="trans('admin::app.users.sessions.email')"
                             />
@@ -48,74 +72,84 @@
                             <x-admin::form.control-group.error control-name="email" />
                         </x-admin::form.control-group>
 
-                        <!-- Password -->
                         <x-admin::form.control-group class="relative w-full">
-                            <x-admin::form.control-group.label class="required">
+                            <x-admin::form.control-group.label class="required text-admin-text">
                                 @lang('admin::app.users.sessions.password')
                             </x-admin::form.control-group.label>
-                    
-                            <x-admin::form.control-group.control 
-                                type="password" 
-                                class="w-[254px] max-w-full ltr:pr-10 rtl:pl-10" 
+
+                            <x-admin::form.control-group.control
+                                type="password"
+                                class="bg-white placeholder:text-admin-muted/60 ltr:pr-11 rtl:pl-11"
                                 id="password"
-                                name="password" 
-                                rules="required|min:6" 
+                                name="password"
+                                rules="required|min:6"
+                                autocomplete="current-password"
+                                maxlength="128"
                                 :label="trans('admin::app.users.sessions.password')"
                                 :placeholder="trans('admin::app.users.sessions.password')"
                             />
-                    
-                            <span 
-                                class="icon-view absolute top-[42px] -translate-y-2/4 cursor-pointer text-2xl ltr:right-2 rtl:left-2"
-                                onclick="switchVisibility()"
-                                id="visibilityIcon"
-                                role="presentation"
-                                tabindex="0"
+
+                            <button
+                                type="button"
+                                class="icon-view absolute top-[42px] -translate-y-1/2 cursor-pointer text-xl text-admin-muted transition-colors hover:text-admin-primary ltr:right-3 rtl:left-3"
+                                id="visibilityToggle"
+                                aria-label="{{ __('Toggle password visibility') }}"
+                                aria-pressed="false"
                             >
-                            </span>
-                    
+                            </button>
+
                             <x-admin::form.control-group.error control-name="password" />
                         </x-admin::form.control-group>
                     </div>
 
-                    <div class="flex items-center justify-between p-4">
-                        <!-- Forgot Password Link -->
-                        <a 
-                            class="cursor-pointer text-xs font-semibold leading-6 text-admin-primary"
+                    <div class="flex items-center justify-between gap-4 border-t border-admin-border px-6 py-4">
+                        <a
+                            class="text-xs font-semibold leading-6 text-admin-primary transition-colors hover:text-admin-primary-hover"
                             href="{{ route('admin.forget_password.create') }}"
                         >
                             @lang('admin::app.users.sessions.forget-password-link')
                         </a>
 
-                        <!-- Submit Button -->
                         <button
-                            class="cursor-pointer rounded-md border border-admin-primary-hover bg-admin-primary px-3.5 py-1.5 font-semibold text-gray-50"
-                            aria-label="{{ trans('admin::app.users.sessions.submit-btn')}}"
+                            type="submit"
+                            class="inline-flex shrink-0 items-center justify-center rounded-md border border-admin-primary-hover bg-admin-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-admin-primary-hover hover:shadow-md focus:outline-none focus:ring-2 focus:ring-admin-primary/30 focus:ring-offset-2"
+                            aria-label="{{ trans('admin::app.users.sessions.submit-btn') }}"
                         >
                             @lang('admin::app.users.sessions.submit-btn')
                         </button>
                     </div>
                 </x-admin::form>
             </div>
-
-            <!-- Powered By -->
-            <div class="text-sm font-normal">
-                @lang('admin::app.users.sessions.powered-by-description', [
-                    'bagisto' => '<a class="text-admin-primary hover:underline" href="https://bagisto.com/en/">Bagisto</a>',
-                    'webkul' => '<a class="text-admin-primary hover:underline" href="https://webkul.com/">Webkul</a>',
-                ])
-            </div>
         </div>
     </div>
 
     @push('scripts')
         <script>
-            function switchVisibility() {
-                let passwordField = document.getElementById("password");
-                let visibilityIcon = document.getElementById("visibilityIcon");
+            (function () {
+                const passwordField = document.getElementById('password');
+                const visibilityToggle = document.getElementById('visibilityToggle');
 
-                passwordField.type = passwordField.type === "password" ? "text" : "password";
-                visibilityIcon.classList.toggle("icon-view-close");
-            }
+                if (! passwordField || ! visibilityToggle) {
+                    return;
+                }
+
+                const toggleVisibility = () => {
+                    const isHidden = passwordField.type === 'password';
+
+                    passwordField.type = isHidden ? 'text' : 'password';
+                    visibilityToggle.classList.toggle('icon-view-close', isHidden);
+                    visibilityToggle.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+                };
+
+                visibilityToggle.addEventListener('click', toggleVisibility);
+
+                visibilityToggle.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        toggleVisibility();
+                    }
+                });
+            })();
         </script>
     @endpush
 </x-admin::layouts.anonymous>

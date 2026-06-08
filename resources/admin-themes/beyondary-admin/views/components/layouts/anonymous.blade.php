@@ -27,11 +27,6 @@
         name="base-url"
         content="{{ url()->to('/') }}"
     >
-    <meta
-        name="generator"
-        content="Bagisto"
-    >
-
     @stack('meta')
 
     @bagistoVite(['assets/css/app.css', 'assets/js/app.js'])

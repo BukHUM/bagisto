@@ -1,11 +1,15 @@
 @php
+    use App\Helpers\AdminMenu;
+
     $admin = auth()->guard('admin')->user();
     $adminLogo = core()->getConfigData('general.design.admin_logo.logo_image');
+    $sidebarMenuItems = AdminMenu::serializedItems();
+    $isHelpActive = AdminMenu::isHelpActive();
 @endphp
 
 <header class="beyondary-admin-header sticky top-0 z-[10001] flex h-14 items-center gap-2 border-b border-admin-border bg-admin-card px-3 sm:gap-3 lg:grid lg:grid-cols-[270px_1fr_auto] lg:items-center lg:gap-0 lg:px-0 group-[.sidebar-collapsed]/container:lg:grid-cols-[70px_1fr_auto]">
     <!-- โซนโลโก้ — กว้างเท่า sidebar พื้นขาวให้โลโก้มองเห็นชัด -->
-    <div class="admin-header-logo-zone flex w-auto shrink-0 items-center gap-2 px-0 lg:col-start-1 lg:h-14 lg:w-[270px] lg:shrink-0 lg:border-r lg:border-admin-border lg:bg-admin-card lg:px-4 group-[.sidebar-collapsed]/container:lg:w-[70px] group-[.sidebar-collapsed]/container:lg:justify-center group-[.sidebar-collapsed]/container:lg:px-2">
+    <div class="admin-header-logo-zone flex min-w-0 flex-1 items-center gap-2 px-0 lg:col-start-1 lg:h-14 lg:w-[270px] lg:flex-none lg:shrink-0 lg:border-r lg:border-admin-border lg:bg-admin-card lg:px-4 group-[.sidebar-collapsed]/container:lg:w-[70px] group-[.sidebar-collapsed]/container:lg:justify-center group-[.sidebar-collapsed]/container:lg:px-2">
         <button
             type="button"
             class="admin-header-action shrink-0 lg:hidden"
@@ -39,23 +43,22 @@
         </a>
     </div>
 
-    <!-- ค้นหา — ข้อ 1: เริ่มแนวเดียวกับเนื้อหาหลัก -->
-    <div class="flex min-w-0 flex-1 items-center lg:col-start-2 lg:px-4">
-        <v-mega-search class="w-full max-w-none">
-            <div class="relative w-full">
-                <i class="icon-search pointer-events-none absolute top-1/2 -translate-y-1/2 text-base text-admin-muted ltr:left-3 rtl:right-3"></i>
-
-                <input
-                    type="text"
-                    class="admin-header-search-input block w-full rounded-lg border border-admin-border bg-admin-surface text-sm text-admin-text transition-all placeholder:text-admin-muted hover:border-admin-primary/40 focus:border-admin-primary focus:outline-none focus:ring-2 focus:ring-admin-primary/15 ltr:pl-9 ltr:pr-3 rtl:pl-3 rtl:pr-9"
-                    placeholder="@lang('admin::app.components.layouts.header.mega-search.title')"
-                >
-            </div>
-        </v-mega-search>
+    <!-- ค้นหาเดสก์ท็อป -->
+    <div class="hidden min-w-0 flex-1 items-center md:flex lg:col-start-2 lg:px-4">
+        <v-mega-search ref="megaSearch" class="w-full max-w-none"></v-mega-search>
     </div>
 
     <!-- utilities + profile -->
     <div class="ml-auto flex shrink-0 items-center gap-2 sm:gap-3 lg:col-start-3 lg:ml-0 lg:px-4">
+        <button
+            type="button"
+            class="admin-header-action shrink-0 md:hidden"
+            aria-label="@lang('admin::app.components.layouts.header.mega-search.title')"
+            @click="$refs.megaSearch.openMobileSearch()"
+        >
+            <i class="icon-search text-lg"></i>
+        </button>
+
         <a
             href="{{ route('shop.home.index') }}"
             target="_blank"
@@ -151,12 +154,14 @@
 <!-- Menu Sidebar Drawer -->
 <x-admin::drawer
     position="left"
-    width="270px"
+    width="280px"
+    :mobile-full-width="false"
     ref="sidebarMenuDrawer"
+    class="beyondary-admin-mobile-sidebar-drawer"
 >
     <!-- Drawer Header -->
     <x-slot:header>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between pr-10">
             @if ($logo = core()->getConfigData('general.design.admin_logo.logo_image'))
                 <img
                     src="{{ Storage::url($logo) }}"
@@ -175,45 +180,14 @@
     </x-slot>
 
     <!-- Drawer Content -->
-    <x-slot:content class="p-3 sm:p-4">
-        <div class="journal-scroll h-[calc(100vh-100px)] overflow-auto">
-            <nav class="flex flex-col gap-0.5">
-                @foreach (menu()->getItems('admin') as $menuItem)
-                    @php
-                        $isDrawerActive = $menuItem->isActive() == 'active';
-                    @endphp
-
-                    <div class="group/item relative">
-                        <a
-                            href="{{ $menuItem->getUrl() }}"
-                            class="flex items-center gap-2.5 rounded-md px-2.5 py-2.5 text-sm transition-colors {{ $isDrawerActive ? 'bg-admin-primary font-semibold text-white' : 'font-medium text-admin-muted hover:bg-admin-surface hover:text-admin-text' }}"
-                        >
-                            <span class="{{ $menuItem->getIcon() }} text-lg {{ $isDrawerActive ? 'text-white' : 'text-admin-muted' }}"></span>
-
-                            <p class="flex-1 whitespace-nowrap">
-                                {{ $menuItem->getName() }}
-                            </p>
-
-                            @if ($menuItem->haveChildren())
-                                <i class="icon-arrow-down text-sm opacity-70"></i>
-                            @endif
-                        </a>
-
-                        @if ($menuItem->haveChildren())
-                            <div class="{{ $menuItem->isActive() ? ' !grid bg-admin-surface' : '' }} hidden min-w-[180px] ltr:pl-8 rtl:pr-8 pb-2 rounded-b-lg z-[100] sm:ltr:pl-10 sm:rtl:pr-10">
-                                @foreach ($menuItem->getChildren() as $subMenuItem)
-                                    <a
-                                        href="{{ $subMenuItem->getUrl() }}"
-                                        class="text-xs whitespace-nowrap py-1 group-[.sidebar-collapsed]/container:px-4 group-[.sidebar-collapsed]/container:py-2 group-[.inactive]/item:px-4 group-[.inactive]/item:py-2 hover:text-admin-primary sm:text-sm sm:group-[.sidebar-collapsed]/container:px-5 sm:group-[.sidebar-collapsed]/container:py-2.5 sm:group-[.inactive]/item:px-5 sm:group-[.inactive]/item:py-2.5 {{ $subMenuItem->isActive() ? 'text-admin-primary' : 'text-admin-muted' }}"
-                                    >
-                                        {{ $subMenuItem->getName() }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
-            </nav>
+    <x-slot:content class="!p-0">
+        <div class="h-[calc(100vh-4.5rem)] bg-admin-sidebar">
+            <v-beyondary-mobile-drawer-nav
+                :items='@json($sidebarMenuItems)'
+                help-url="{{ route('admin.help.index') }}"
+                help-label="{{ __('admin::app.components.layouts.sidebar.help') }}"
+                :help-active="{{ $isHelpActive ? 'true' : 'false' }}"
+            ></v-beyondary-mobile-drawer-nav>
         </div>
     </x-slot>
 </x-admin::drawer>
@@ -221,36 +195,188 @@
 @pushOnce('scripts')
     <script
         type="text/x-template"
-        id="v-mega-search-template"
+        id="v-beyondary-mobile-drawer-nav-template"
     >
-        <div class="relative w-full">
-            <i class="icon-search pointer-events-none absolute top-1/2 -translate-y-1/2 text-base text-admin-muted ltr:left-3 rtl:right-3"></i>
-
-            <input
-                type="text"
-                class="admin-header-search-input peer block w-full rounded-lg border border-admin-border bg-admin-surface text-sm text-admin-text transition-all placeholder:text-admin-muted hover:border-admin-primary/40 focus:border-admin-primary focus:outline-none focus:ring-2 focus:ring-admin-primary/15 ltr:pl-9 ltr:pr-3 rtl:pl-3 rtl:pr-9"
-                :class="{'border-admin-primary ring-2 ring-admin-primary/15': isDropdownOpen}"
-                placeholder="@lang('admin::app.components.layouts.header.mega-search.title')"
-                v-model.lazy="searchTerm"
-                @click="searchTerm.length >= 2 ? isDropdownOpen = true : {}"
-                v-debounce="500"
-            >
-
-            <div
-                class="absolute top-8 z-10 w-full rounded-lg border bg-white shadow-[0px_0px_0px_0px_rgba(0,0,0,0.10),0px_1px_3px_0px_rgba(0,0,0,0.10),0px_5px_5px_0px_rgba(0,0,0,0.09),0px_12px_7px_0px_rgba(0,0,0,0.05),0px_22px_9px_0px_rgba(0,0,0,0.01),0px_34px_9px_0px_rgba(0,0,0,0.00)] border-admin-border  sm:top-10"
-                v-if="isDropdownOpen"
-            >
-                <!-- Search Tabs -->
-                <div class="flex border-b text-xs text-gray-600 border-admin-border text-admin-muted sm:text-sm">
+        <div class="beyondary-admin-drawer-nav flex h-full min-h-0 flex-col">
+            <div class="sidebar-scroll flex-1 overflow-y-auto overflow-x-hidden px-2 py-2">
+                <nav class="flex flex-col gap-0">
                     <div
-                        class="cursor-pointer p-2 hover:bg-gray-100 sm:p-4"
-                        :class="{ 'border-b-2 border-admin-primary': activeTab == tab.key }"
-                        v-for="tab in tabs"
-                        @click="activeTab = tab.key; search();"
+                        v-for="item in items"
+                        :key="item.key"
+                        class="sidebar-menu-item"
                     >
-                        @{{ tab.title }}
+                        <a
+                            v-if="! item.children.length"
+                            :href="item.url"
+                            class="sidebar-nav-link flex w-full items-center gap-2.5 rounded-md px-2 py-2 transition-colors duration-200"
+                            :class="{ 'sidebar-nav-link--active': item.active }"
+                            @click="handleNavigate"
+                        >
+                            <span :class="item.icon + ' sidebar-nav-link__icon'"></span>
+
+                            <p class="sidebar-nav-link__label min-w-0 flex-1 truncate text-sm font-medium">
+                                @{{ item.name }}
+                            </p>
+                        </a>
+
+                        <div
+                            v-else
+                            class="sidebar-submenu-group"
+                            :class="{ 'sidebar-submenu-group--expanded': isExpanded(item.key) }"
+                        >
+                            <button
+                                type="button"
+                                class="sidebar-nav-link m-0 flex w-full items-center gap-2.5 rounded-md border-0 px-2 py-2 text-left transition-colors duration-200"
+                                :class="{
+                                    'sidebar-nav-link--active': item.active && ! isExpanded(item.key),
+                                    'sidebar-nav-link--open': isExpanded(item.key),
+                                }"
+                                @click="toggle(item.key)"
+                            >
+                                <span :class="item.icon + ' sidebar-nav-link__icon'"></span>
+
+                                <p class="sidebar-nav-link__label min-w-0 flex-1 truncate text-sm font-medium">
+                                    @{{ item.name }}
+                                </p>
+
+                                <i
+                                    class="sidebar-nav-link__chevron icon-arrow-down shrink-0 text-sm transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                                    :class="{ 'rotate-180': isExpanded(item.key) }"
+                                ></i>
+                            </button>
+
+                            <div
+                                class="sidebar-submenu-panel"
+                                :class="{ 'sidebar-submenu-panel--expanded': isExpanded(item.key) }"
+                            >
+                                <div class="sidebar-submenu-panel__inner grid gap-0.5">
+                                    <a
+                                        v-for="child in item.children"
+                                        :key="child.key"
+                                        :href="child.url"
+                                        class="sidebar-submenu-link"
+                                        :class="{ 'sidebar-submenu-link--active': child.active }"
+                                        @click="handleNavigate"
+                                    >
+                                        <span
+                                            :class="(child.icon || 'icon-list') + ' sidebar-submenu-link__icon shrink-0'"
+                                            aria-hidden="true"
+                                        ></span>
+
+                                        <span class="min-w-0 truncate">
+                                            @{{ child.name }}
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </nav>
+            </div>
+
+            <div class="shrink-0 px-2 pb-3">
+                <div class="mb-2 border-t border-white/10"></div>
+
+                <a
+                    :href="helpUrl"
+                    class="sidebar-nav-link flex w-full items-center gap-2.5 rounded-md px-2 py-2 transition-colors duration-200"
+                    :class="{ 'sidebar-nav-link--active': helpActive }"
+                    @click="handleNavigate"
+                >
+                    <span class="icon-information sidebar-nav-link__icon"></span>
+
+                    <p class="sidebar-nav-link__label truncate text-sm font-medium">
+                        @{{ helpLabel }}
+                    </p>
+                </a>
+            </div>
+        </div>
+    </script>
+
+    <script type="module">
+        app.component('v-beyondary-mobile-drawer-nav', {
+            template: '#v-beyondary-mobile-drawer-nav-template',
+
+            props: {
+                items: {
+                    type: Array,
+                    required: true,
+                },
+                helpUrl: {
+                    type: String,
+                    required: true,
+                },
+                helpLabel: {
+                    type: String,
+                    required: true,
+                },
+                helpActive: {
+                    type: Boolean,
+                    default: false,
+                },
+            },
+
+            data() {
+                return {
+                    expandedKeys: [],
+                };
+            },
+
+            mounted() {
+                this.expandedKeys = this.items
+                    .filter((item) => item.active && item.children.length)
+                    .map((item) => item.key);
+            },
+
+            methods: {
+                isExpanded(key) {
+                    return this.expandedKeys.includes(key);
+                },
+
+                toggle(key) {
+                    if (this.expandedKeys.includes(key)) {
+                        this.expandedKeys = [];
+                    } else {
+                        this.expandedKeys = [key];
+                    }
+                },
+
+                handleNavigate() {
+                    this.closeDrawer();
+                },
+
+                closeDrawer() {
+                    let parent = this.$parent;
+
+                    while (parent) {
+                        if (typeof parent.close === 'function' && parent.isOpen !== undefined) {
+                            parent.close();
+
+                            return;
+                        }
+
+                        parent = parent.$parent;
+                    }
+                },
+            },
+        });
+    </script>
+
+    <script
+        type="text/x-template"
+        id="v-mega-search-panel-template"
+    >
+        <div class="flex min-h-0 flex-col" :class="variant === 'sheet' ? 'h-full' : ''">
+            <div class="flex shrink-0 border-b border-admin-border text-xs text-admin-muted sm:text-sm">
+                <div
+                    class="cursor-pointer p-2 hover:bg-admin-surface sm:p-4"
+                    :class="{ 'border-b-2 border-admin-primary': activeTab == tab.key }"
+                    v-for="tab in tabs"
+                    @click="$emit('select-tab', tab.key)"
+                >
+                    @{{ tab.title }}
                 </div>
+            </div>
 
                 <!-- Searched Results -->
                 <template v-if="activeTab == 'products'">
@@ -259,7 +385,10 @@
                     </template>
 
                     <template v-else>
-                        <div class="grid max-h-[300px] overflow-y-auto sm:max-h-[400px]">
+                        <div
+                            class="grid overflow-y-auto"
+                            :class="variant === 'sheet' ? 'min-h-0 flex-1' : 'max-h-[300px] sm:max-h-[400px]'"
+                        >
                             <a
                                 :href="'{{ route('admin.catalog.products.edit', ':id') }}'.replace(':id', product.id)"
                                 class="flex cursor-pointer justify-between gap-2 border-b border-slate-300 p-3 last:border-b-0 hover:bg-gray-100 border-admin-border sm:gap-2.5 sm:p-4"
@@ -332,7 +461,10 @@
                     </template>
 
                     <template v-else>
-                        <div class="grid max-h-[300px] overflow-y-auto sm:max-h-[400px]">
+                        <div
+                            class="grid overflow-y-auto"
+                            :class="variant === 'sheet' ? 'min-h-0 flex-1' : 'max-h-[300px] sm:max-h-[400px]'"
+                        >
                             <a
                                 :href="'{{ route('admin.sales.orders.view', ':id') }}'.replace(':id', order.id)"
                                 class="grid cursor-pointer place-content-start gap-1 border-b border-slate-300 p-3 last:border-b-0 hover:bg-gray-100 border-admin-border sm:gap-1.5 sm:p-4"
@@ -374,7 +506,10 @@
                     </template>
 
                     <template v-else>
-                        <div class="grid max-h-[300px] overflow-y-auto sm:max-h-[400px]">
+                        <div
+                            class="grid overflow-y-auto"
+                            :class="variant === 'sheet' ? 'min-h-0 flex-1' : 'max-h-[300px] sm:max-h-[400px]'"
+                        >
                             <a
                                 :href="'{{ route('admin.catalog.categories.edit', ':id') }}'.replace(':id', category.id)"
                                 class="cursor-pointer border-b p-3 text-xs font-semibold text-gray-600 last:border-b-0 hover:bg-gray-100 border-admin-border text-admin-muted sm:p-4 sm:text-sm"
@@ -410,7 +545,10 @@
                     </template>
 
                     <template v-else>
-                        <div class="grid max-h-[300px] overflow-y-auto sm:max-h-[400px]">
+                        <div
+                            class="grid overflow-y-auto"
+                            :class="variant === 'sheet' ? 'min-h-0 flex-1' : 'max-h-[300px] sm:max-h-[400px]'"
+                        >
                             <a
                                 :href="'{{ route('admin.customers.customers.view', ':id') }}'.replace(':id', customer.id)"
                                 class="grid cursor-pointer place-content-start gap-1 border-b border-slate-300 p-3 last:border-b-0 hover:bg-gray-100 border-admin-border sm:gap-1.5 sm:p-4"
@@ -445,11 +583,140 @@
                         </div>
                     </template>
                 </template>
+        </div>
+    </script>
+
+    <script
+        type="text/x-template"
+        id="v-mega-search-template"
+    >
+        <div class="relative w-full">
+            <div class="relative hidden w-full md:block">
+                <i class="icon-search pointer-events-none absolute top-1/2 -translate-y-1/2 text-base text-admin-muted ltr:left-3 rtl:right-3"></i>
+
+                <input
+                    type="text"
+                    class="admin-header-search-input block w-full rounded-lg border border-admin-border bg-admin-surface text-sm text-admin-text transition-all placeholder:text-admin-muted hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30 ltr:pl-9 ltr:pr-3 rtl:pl-3 rtl:pr-9"
+                    placeholder="@lang('admin::app.components.layouts.header.mega-search.title')"
+                    v-model.lazy="searchTerm"
+                    @click="searchTerm.length >= 2 ? isDropdownOpen = true : {}"
+                    v-debounce="500"
+                >
+
+                <div
+                    class="absolute top-8 z-10 w-full rounded-lg border border-admin-border bg-admin-card shadow-lg sm:top-10"
+                    v-if="isDropdownOpen && ! isMobileModalOpen"
+                >
+                    <v-mega-search-panel
+                        :active-tab="activeTab"
+                        :tabs="tabs"
+                        :searched-results="searchedResults"
+                        :is-loading="isLoading"
+                        :search-term="searchTerm"
+                        variant="dropdown"
+                        @select-tab="onTabSelected"
+                    />
+                </div>
             </div>
+
+            <Teleport to="body">
+                <div
+                    v-if="isMobileModalOpen"
+                    class="fixed inset-0 z-[10002] flex flex-col md:hidden"
+                >
+                <div
+                    class="absolute inset-0 bg-black/40"
+                    @click="closeMobileSearch"
+                ></div>
+
+                <div class="relative z-10 flex min-h-0 flex-1 flex-col bg-admin-card">
+                    <div class="flex shrink-0 items-center gap-2 border-b border-admin-border px-3 py-2.5">
+                        <div class="relative min-w-0 flex-1">
+                            <i class="icon-search pointer-events-none absolute top-1/2 -translate-y-1/2 text-base text-admin-muted ltr:left-3 rtl:right-3"></i>
+
+                            <input
+                                ref="mobileSearchInput"
+                                type="text"
+                                class="admin-header-search-input block w-full rounded-lg border border-admin-border bg-admin-surface text-sm text-admin-text transition-all placeholder:text-admin-muted hover:border-admin-muted focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30 ltr:pl-9 ltr:pr-3 rtl:pl-3 rtl:pr-9"
+                                placeholder="@lang('admin::app.components.layouts.header.mega-search.title')"
+                                v-model.lazy="searchTerm"
+                                v-debounce="500"
+                            >
+                        </div>
+
+                        <button
+                            type="button"
+                            class="admin-header-action shrink-0"
+                            :aria-label="closeSearchLabel"
+                            @click="closeMobileSearch"
+                        >
+                            <i class="icon-cross text-lg"></i>
+                        </button>
+                    </div>
+
+                    <v-mega-search-panel
+                        v-if="isDropdownOpen"
+                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
+                        :active-tab="activeTab"
+                        :tabs="tabs"
+                        :searched-results="searchedResults"
+                        :is-loading="isLoading"
+                        :search-term="searchTerm"
+                        variant="sheet"
+                        @select-tab="onTabSelected"
+                    />
+
+                    <p
+                        v-else
+                        class="px-4 py-10 text-center text-sm text-admin-muted"
+                    >
+                        @lang('admin::app.components.layouts.header.mega-search.title')
+                    </p>
+                </div>
+            </div>
+            </Teleport>
         </div>
     </script>
 
     <script type="module">
+        app.component('v-mega-search-panel', {
+            template: '#v-mega-search-panel-template',
+
+            props: {
+                activeTab: {
+                    type: String,
+                    required: true,
+                },
+
+                tabs: {
+                    type: Object,
+                    required: true,
+                },
+
+                searchedResults: {
+                    type: Object,
+                    required: true,
+                },
+
+                isLoading: {
+                    type: Boolean,
+                    default: false,
+                },
+
+                searchTerm: {
+                    type: String,
+                    default: '',
+                },
+
+                variant: {
+                    type: String,
+                    default: 'dropdown',
+                },
+            },
+
+            emits: ['select-tab'],
+        });
+
         app.component('v-mega-search', {
             template: '#v-mega-search-template',
 
@@ -458,6 +725,12 @@
                     activeTab: 'products',
 
                     isDropdownOpen: false,
+
+                    isMobileModalOpen: false,
+
+                    megaSearchLabel: "@lang('admin::app.components.layouts.header.mega-search.title')",
+
+                    closeSearchLabel: "Close",
 
                     tabs: {
                         products: {
@@ -507,13 +780,42 @@
 
             created() {
                 window.addEventListener('click', this.handleFocusOut);
+                window.addEventListener('keydown', this.handleEscape);
             },
 
             beforeDestroy() {
                 window.removeEventListener('click', this.handleFocusOut);
+                window.removeEventListener('keydown', this.handleEscape);
+                document.body.style.overflow = '';
             },
 
             methods: {
+                openMobileSearch() {
+                    this.isMobileModalOpen = true;
+                    document.body.style.overflow = 'hidden';
+
+                    this.$nextTick(() => {
+                        this.$refs.mobileSearchInput?.focus();
+                    });
+                },
+
+                closeMobileSearch() {
+                    this.isMobileModalOpen = false;
+                    this.isDropdownOpen = false;
+                    document.body.style.overflow = '';
+                },
+
+                onTabSelected(tabKey) {
+                    this.activeTab = tabKey;
+                    this.search();
+                },
+
+                handleEscape(event) {
+                    if (event.key === 'Escape' && this.isMobileModalOpen) {
+                        this.closeMobileSearch();
+                    }
+                },
+
                 search() {
                     if (this.searchTerm.length <= 1) {
                         this.searchedResults[this.activeTab] = [];
@@ -542,6 +844,10 @@
                 },
 
                 handleFocusOut(e) {
+                    if (this.isMobileModalOpen) {
+                        return;
+                    }
+
                     if (! this.$el.contains(e.target)) {
                         this.isDropdownOpen = false;
                     }

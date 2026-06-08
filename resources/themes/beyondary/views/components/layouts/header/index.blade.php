@@ -3,7 +3,7 @@
 @inject('themeCustomizationRepository', 'Webkul\Theme\Repositories\ThemeCustomizationRepository')
 
 @php
-    use Beyondary\Storefront\Services\HomeSectionService;
+    use App\Helpers\BeyondaryTheme;
 
     $channel = core()->getCurrentChannel();
     $locale = app()->getLocale();
@@ -15,10 +15,10 @@
             'theme_code' => $channel->theme,
             'channel_id' => $channel->id,
         ])
-        ->first(fn ($item) => $item->name === HomeSectionService::NAVIGATION_NAME);
+        ->first(fn ($item) => $item->name === BeyondaryTheme::NAVIGATION_NAME);
 
     $navOptions = $navigation?->translate($locale)?->options;
-    $defaultNav = app(HomeSectionService::class)->defaultNavigationFields($locale);
+    $defaultNav = BeyondaryTheme::defaultNavigationFields($locale);
 
     $announcement = $navOptions['announcement'] ?? $defaultNav['announcement'];
     $navLinks = collect($navOptions['links'] ?? $defaultNav['links'])

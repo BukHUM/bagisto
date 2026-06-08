@@ -34,6 +34,45 @@ alwaysApply: false
 
 **ไม่ทำ:** dark/light toggle — ลบ `v-dark`, cookie `dark_mode`, class `dark:*` ใน override
 
+## Form fields — border & focus (มาตรฐาน)
+
+**แหล่งอ้างอิง (Source of Truth):**  
+`resources/admin-themes/beyondary-admin/views/components/form/control-group/control.blade.php`
+
+ทุก input / select / textarea ใน admin ต้องใช้สไตล์จาก component นี้ — **ห้าม** กำหนด `focus:border-*` หรือ `focus:ring-*` ซ้ำใน Blade หน้าเดี่ยว (เช่น login) เว้นแต่มีเหตุผลพิเศษ
+
+### สถานะฟิลด์
+
+| สถานะ | Border | Ring | หมายเหตุ |
+|--------|--------|------|----------|
+| **ปกติ** | `border border-admin-border` | ไม่มี | พื้นหลัง `bg-admin-card` |
+| **Hover** | `hover:border-admin-muted` | ไม่มี | ไม่เปลี่ยนเป็นสีทอง |
+| **Focus** | `focus:border-admin-border` (คงสีเดิม) | `focus:outline-none focus:ring-2 focus:ring-admin-primary/30` | **ใช้ ring อย่างเดียว** — ห้าม `focus:border-admin-primary` |
+| **Error** (Vue) | `!border-red-600` | ไม่มี ring | จาก `:class` ใน `control.blade.php` |
+
+### Class มาตรฐาน (text / email / password / number)
+
+```
+w-full rounded-md border border-admin-border bg-admin-card px-3 py-2.5 text-sm text-admin-text transition-all
+hover:border-admin-muted
+focus:border-admin-border focus:outline-none focus:ring-2 focus:ring-admin-primary/30
+```
+
+กลุ่ม `focus-within:*` ใช้ชุดเดียวกันสำหรับ wrapper (เช่น price input)
+
+### กฎเมื่อ override หน้าเดี่ยว
+
+- ใส่ได้เฉพาะ class เฉพาะหน้า เช่น `bg-white`, `placeholder:text-admin-muted/60`, `ltr:pr-11` (password toggle)
+- **ห้าม** ใส่ `focus:border-admin-primary`, `focus:ring-1`, `focus:ring-4` ซ้ำ — จะ merge class กับ component แล้วซ้อนกัน
+- หลังเพิ่ม utility ใหม่ใน Blade → `npm run build` ใน `resources/admin-themes/beyondary-admin/`
+- `focus:ring-2` และ `focus:ring-admin-primary/30` อยู่ใน `tailwind.config.cjs` → `safelist` แล้ว
+
+### สิ่งที่ห้ามทำ
+
+- ใช้ `blue-600` / `focus:border-gray-400` จาก package default โดยไม่ override
+- ใช้ arbitrary class ใน Blade โดยไม่ build (เช่น `max-w-[420px]`, `focus:ring-4`) — จะไม่มีผลใน CSS
+- เปลี่ยนความหนา ring เป็นค่าอื่นโดยไม่อัปเดต rule นี้และ `control.blade.php` พร้อมกัน
+
 ## โครงสร้าง override
 
 ```

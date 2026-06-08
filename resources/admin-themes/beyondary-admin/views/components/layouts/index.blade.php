@@ -107,7 +107,7 @@
         <x-admin::layouts.header />
 
         <div class="flex flex-col lg:flex-row gap-0">
-            <div class="lg:fixed lg:top-14 lg:left-0 lg:z-[1000] w-full lg:w-[270px] rtl:lg:right-0 rtl:lg:left-auto group-[.sidebar-collapsed]/container:lg:w-[70px]">
+            <div class="lg:fixed lg:top-14 lg:left-0 lg:z-[1000] w-full overflow-visible lg:w-[270px] rtl:lg:right-0 rtl:lg:left-auto group-[.sidebar-collapsed]/container:lg:w-[70px]">
                 <x-admin::layouts.sidebar />
             </div>
 

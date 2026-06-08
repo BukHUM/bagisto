@@ -5,13 +5,11 @@ namespace Beyondary\Storefront\Http\Controllers\Admin;
 use Beyondary\Storefront\Services\HomeSectionService;
 use Illuminate\View\View;
 use Webkul\Admin\Http\Controllers\Controller;
-use Webkul\Core\Repositories\ChannelRepository;
 
 class HomeCustomizationController extends Controller
 {
     public function __construct(
-        protected HomeSectionService $homeSectionService,
-        protected ChannelRepository $channelRepository
+        protected HomeSectionService $homeSectionService
     ) {}
 
     public function index(): View
@@ -50,7 +48,6 @@ class HomeCustomizationController extends Controller
         return view('beyondary-storefront::admin.home.index', [
             'channel' => $channel,
             'sections' => $sections,
-            'channels' => $this->channelRepository->all(),
             'storefrontUrl' => route('shop.home.index'),
             'exportZipUrl' => route('admin.beyondary.storefront.export'),
             'exportJsonUrl' => route('admin.beyondary.storefront.export', ['format' => 'json']),

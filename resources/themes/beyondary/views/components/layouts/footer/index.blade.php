@@ -4,7 +4,7 @@
 @inject('categoryRepository', 'Webkul\Category\Repositories\CategoryRepository')
 
 @php
-    use Beyondary\Storefront\Services\HomeSectionService;
+    use App\Helpers\BeyondaryTheme;
 
     $channel = core()->getCurrentChannel();
     $locale = app()->getLocale();
@@ -17,7 +17,7 @@
     ]);
 
     $footerOptions = $footerLinks?->translate($locale)?->options ?? [];
-    $defaultFooter = app(HomeSectionService::class)->defaultFooterFields($locale);
+    $defaultFooter = BeyondaryTheme::defaultFooterFields($locale);
 
     $footerAbout = $footerOptions['about'] ?? $defaultFooter['about'];
     $footerSocial = array_merge($defaultFooter['social'], $footerOptions['social'] ?? []);
