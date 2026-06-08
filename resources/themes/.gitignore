@@ -1,2 +1,5 @@
 *
 !.gitignore
+!beyondary/
+!beyondary/**
+beyondary/node_modules/

@@ -1,0 +1,25 @@
+@import "../../../../../packages/Webkul/Shop/src/Resources/assets/css/app.css";
+
+.blend-multiply {
+    mix-blend-mode: multiply;
+}
+
+.image-placeholder {
+    background-color: #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover .image-placeholder {
+    transform: scale(1.05);
+}
+
+.overflow-hidden-image {
+    overflow: hidden;
+}
