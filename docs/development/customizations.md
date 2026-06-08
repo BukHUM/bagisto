@@ -31,7 +31,7 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 
 | Layer | ปลอดภัยต่ออัปเกรด | ตัวอย่างในโปรเจกต์นี้ |
 |-------|-------------------|----------------------|
-| 1 Theme | สูง | `beyondary` theme |
+| 1 Theme | สูง | shop `beyondary` + admin `beyondary-admin` |
 | 2 App/Config/Lang | สูง | `config/themes.php`, `resources/lang/*/beyondary.php` |
 | 3 App migrations | สูง | `database/migrations/2026_06_08_*` |
 | 4 Custom package | สูง | `packages/Beyondary/Performance/` |
@@ -41,7 +41,7 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 
 ## Layer 1–3: ปลอดภัย (ไม่โดน composer ทับ)
 
-### Theme `beyondary`
+### Theme `beyondary` (storefront)
 
 | รายการ | Path |
 |--------|------|
@@ -53,6 +53,19 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 | ภาษา theme | `resources/lang/th/beyondary.php`, `resources/lang/en/beyondary.php` |
 
 **หลังอัปเกรด:** ไม่ต้องทำอะไรกับ theme นอกจากทดสอบ storefront + `npm run build` ใน `resources/themes/beyondary/` ถ้าแก้ assets
+
+### Theme `beyondary-admin` (หลังบ้าน)
+
+| รายการ | Path |
+|--------|------|
+| แผน / mockup | `docs/development/admin-theme-plan.md`, `docs/mockup/beyondary_admin_dashboard.html` |
+| Theme config | `config/themes.php` (`admin-default` → `beyondary-admin`), `config/bagisto-vite.php` |
+| Blade overrides (Phase 2) | `resources/admin-themes/beyondary-admin/views/components/layouts/` |
+| Vite/Tailwind | `resources/admin-themes/beyondary-admin/` |
+| Build output | `public/themes/admin/beyondary-admin/build/` |
+| Admin เดิม | ยังอยู่ใน `packages/Webkul/Admin/` — สลับกลับด้วย `admin-default` => `default` |
+
+**Build:** `cd resources/admin-themes/beyondary-admin && npm run build`
 
 ### Performance indexes (DB)
 

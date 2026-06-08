@@ -55,7 +55,7 @@
     <link
         rel="preload"
         as="image"
-        href="{{ url('cache/logo/bagisto.png') }}"
+        href="{{ bagisto_asset('images/logo.svg') }}"
     >
 
     @if ($favicon = core()->getConfigData('general.design.admin_logo.favicon'))

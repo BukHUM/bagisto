@@ -38,10 +38,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($appUrl = config('app.url')) {
             URL::forceRootUrl($appUrl);
+        }
 
-            if (str_starts_with($appUrl, 'https://')) {
-                URL::forceScheme('https');
-            }
+        if ($this->app->environment('production') || request()->isSecure()) {
+            URL::forceScheme('https');
         }
 
         ParallelTesting::setUpTestDatabase(function (string $database, int $token) {

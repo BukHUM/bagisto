@@ -17,6 +17,12 @@ return [
             'package_assets_directory' => 'src/Resources/assets',
         ],
 
+        'beyondary-admin' => [
+            'hot_file' => 'admin-beyondary-vite.hot',
+            'build_directory' => 'themes/admin/beyondary-admin/build',
+            'package_assets_directory' => 'assets',
+        ],
+
         'shop' => [
             'hot_file' => 'shop-default-vite.hot',
             'build_directory' => 'themes/shop/default/build',

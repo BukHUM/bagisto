@@ -166,18 +166,18 @@ components/
 
 ### Phase 0 — Scaffold & Git (0.5–1 วัน)
 
-- [ ] สร้าง `resources/admin-themes/beyondary-admin/` (vite, tailwind, package.json)
-- [ ] ลงทะเบียน `config/themes.php` → `admin.beyondary-admin` (`parent => 'default'`)
-- [ ] ลงทะเบียน `config/bagisto-vite.php` → key `beyondary-admin`
-- [ ] อัปเดต `resources/admin-themes/.gitignore` ให้ track `beyondary-admin/` (แบบเดียวกับ shop)
-- [ ] **`admin-default` ยังเป็น `default`** — ยังไม่สลับ
-- [ ] เอกสาร: อัปเดต `customizations.md` (Layer 1 admin theme)
+- [x] สร้าง `resources/admin-themes/beyondary-admin/` (vite, tailwind, package.json)
+- [x] ลงทะเบียน `config/themes.php` → `admin.beyondary-admin` (`parent => 'default'`)
+- [x] ลงทะเบียน `config/bagisto-vite.php` → key `beyondary-admin`
+- [x] อัปเดต `resources/admin-themes/.gitignore` ให้ track `beyondary-admin/`
+- [x] `admin-default` → `beyondary-admin` (เปิดใช้แล้ว)
+- [x] เอกสาร: อัปเดต `customizations.md`
 
-**ทดสอบ:** `npm run build` สำเร็จ, `php artisan view:clear`, เข้า admin ยังเป็น theme เดิม
+**ทดสอบ:** `npm run build` สำเร็จ, admin login HTTP 200
 
 ### Phase 1 — Design Spec & Mockup (1–2 วัน)
 
-- [ ] สร้าง `docs/mockup/beyondary_admin_dashboard.html` (static HTML 1 หน้า — sidebar + header + datagrid ตัวอย่าง)
+- [x] สร้าง `docs/mockup/beyondary_admin_dashboard.html`
 - [ ] กำหนด tokens สุดท้ายใน `tailwind.config.cjs` ของ theme
 - [ ] Screenshot admin เดิมเป็น reference (before)
 - [ ] Checklist component: sidebar states, buttons, table, form field, modal, login
@@ -186,19 +186,17 @@ components/
 
 ### Phase 2 — Layout Shell (2–3 วัน)
 
-- [ ] Override `index`, `anonymous`, `header`, `sidebar`, `tabs`
-- [ ] ลบการอ่าน `request()->cookie('dark_mode')` และ class `dark` บน `<html>`
-- [ ] ลบ `<v-dark>` จาก header
-- [ ] โหลด `@bagistoVite` จาก theme (ไม่ใช่ path package เดิม)
-- [ ] ตั้ง `admin-default` → `beyondary-admin` ใน **environment dev เท่านั้น** (หรือสลับชั่วคราวเพื่อทดสอบ)
+- [x] Override `index`, `anonymous`, `header`, `sidebar`, `tabs`
+- [x] ลบการอ่าน `dark_mode` cookie และ `<v-dark>` จาก header
+- [x] โหลด `@bagistoVite` จาก theme assets
+- [x] Semi-dark sidebar + พื้น main `admin-surface`
 
-**ทดสอบ:**
+**ทดสอบ (ทำต่อด้วยมือ):**
 
-- [ ] Login / logout
-- [ ] ทุกเมนูหลักเปิดได้ (ไม่ broken layout)
+- [ ] Login / logout หลัง authenticate
+- [ ] ทุกเมนูหลักเปิดได้
 - [ ] Sidebar collapse / mobile drawer
-- [ ] Mega search, notifications ทำงาน
-- [ ] ไม่มี flash สีขาวบนพื้นขาว (contrast)
+- [ ] Mega search, notifications
 
 ### Phase 3 — Shared Components (3–4 วัน)
 

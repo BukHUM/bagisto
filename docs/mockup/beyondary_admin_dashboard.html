@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyondary Admin — Dashboard Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'admin-sidebar': '#2E2720',
+                        'admin-sidebar-hover': '#3A3229',
+                        'admin-sidebar-active': '#B88B54',
+                        'admin-sidebar-text': '#E8E2D9',
+                        'admin-sidebar-muted': '#A89B8C',
+                        'admin-surface': '#F8F6F0',
+                        'admin-card': '#FFFFFF',
+                        'admin-border': '#E5DFD4',
+                        'admin-text': '#3A2618',
+                        'admin-muted': '#6B4A31',
+                        'admin-primary': '#B88B54',
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        display: ['Playfair Display', 'serif'],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-admin-surface font-sans text-admin-text antialiased">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 flex items-center justify-between border-b border-admin-border bg-admin-card px-4 py-2.5">
+        <div class="flex items-center gap-3">
+            <div class="h-9 w-28 rounded bg-admin-border/60"></div>
+            <div class="hidden h-9 w-72 rounded-lg border border-admin-border bg-admin-surface px-3 sm:flex items-center text-sm text-admin-muted">ค้นหา...</div>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="h-9 w-9 rounded-full bg-admin-primary text-center text-sm leading-9 text-white">B</div>
+        </div>
+    </header>
+
+    <div class="flex min-h-[calc(100vh-56px)]">
+        <!-- Sidebar semi-dark -->
+        <aside class="hidden w-[270px] shrink-0 bg-admin-sidebar px-4 pt-4 lg:block">
+            <nav class="space-y-1">
+                <a href="#" class="flex items-center gap-2.5 rounded-lg bg-admin-sidebar-active px-2 py-2 text-sm font-semibold text-admin-text">แดชบอร์ด</a>
+                <a href="#" class="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm font-medium text-admin-sidebar-text hover:bg-admin-sidebar-hover">คำสั่งซื้อ</a>
+                <a href="#" class="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm font-medium text-admin-sidebar-text hover:bg-admin-sidebar-hover">สินค้า</a>
+                <a href="#" class="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm font-medium text-admin-sidebar-text hover:bg-admin-sidebar-hover">ลูกค้า</a>
+                <a href="#" class="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm font-medium text-admin-sidebar-text hover:bg-admin-sidebar-hover">การตลาด</a>
+            </nav>
+        </aside>
+
+        <!-- Main -->
+        <main class="flex-1 p-4 lg:p-6">
+            <h1 class="font-display text-2xl font-semibold text-admin-text">แดชบอร์ด</h1>
+            <p class="mt-1 text-sm text-admin-muted">ภาพรวมร้าน Beyondary</p>
+
+            <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div class="rounded-lg border border-admin-border bg-admin-card p-4 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-admin-muted">ยอดขายวันนี้</p>
+                    <p class="mt-2 text-2xl font-semibold">฿12,450</p>
+                </div>
+                <div class="rounded-lg border border-admin-border bg-admin-card p-4 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-admin-muted">คำสั่งซื้อ</p>
+                    <p class="mt-2 text-2xl font-semibold">24</p>
+                </div>
+                <div class="rounded-lg border border-admin-border bg-admin-card p-4 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-admin-muted">ลูกค้าใหม่</p>
+                    <p class="mt-2 text-2xl font-semibold">8</p>
+                </div>
+                <div class="rounded-lg border border-admin-border bg-admin-card p-4 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-admin-muted">สินค้า</p>
+                    <p class="mt-2 text-2xl font-semibold">156</p>
+                </div>
+            </div>
+
+            <!-- Datagrid sample -->
+            <div class="mt-6 overflow-hidden rounded-lg border border-admin-border bg-admin-card shadow-sm">
+                <div class="border-b border-admin-border px-4 py-3">
+                    <h2 class="text-sm font-semibold">คำสั่งซื้อล่าสุด</h2>
+                </div>
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-[#F5F3EE] text-admin-muted">
+                        <tr>
+                            <th class="px-4 py-3 font-medium">Order ID</th>
+                            <th class="px-4 py-3 font-medium">ลูกค้า</th>
+                            <th class="px-4 py-3 font-medium">สถานะ</th>
+                            <th class="px-4 py-3 font-medium">ยอดรวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-admin-border">
+                            <td class="px-4 py-3">#1001</td>
+                            <td class="px-4 py-3">สมชาย ใจดี</td>
+                            <td class="px-4 py-3"><span class="rounded-full bg-admin-primary/15 px-2 py-0.5 text-xs text-admin-primary">Processing</span></td>
+                            <td class="px-4 py-3">฿1,290</td>
+                        </tr>
+                        <tr class="border-t border-admin-border">
+                            <td class="px-4 py-3">#1000</td>
+                            <td class="px-4 py-3">Jane Doe</td>
+                            <td class="px-4 py-3"><span class="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">Completed</span></td>
+                            <td class="px-4 py-3">฿3,450</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

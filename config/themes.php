@@ -48,7 +48,7 @@ return [
     |
     */
 
-    'admin-default' => 'default',
+    'admin-default' => 'beyondary-admin',
 
     'admin' => [
         'default' => [
@@ -60,6 +60,19 @@ return [
                 'hot_file' => 'admin-default-vite.hot',
                 'build_directory' => 'themes/admin/default/build',
                 'package_assets_directory' => 'src/Resources/assets',
+            ],
+        ],
+
+        'beyondary-admin' => [
+            'name' => 'Beyondary Admin',
+            'assets_path' => 'public/themes/admin/beyondary-admin',
+            'views_path' => 'resources/admin-themes/beyondary-admin/views',
+            'parent' => 'default',
+
+            'vite' => [
+                'hot_file' => 'admin-beyondary-vite.hot',
+                'build_directory' => 'themes/admin/beyondary-admin/build',
+                'package_assets_directory' => 'assets',
             ],
         ],
     ],

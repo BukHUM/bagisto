@@ -13,6 +13,7 @@
 | [development/admin-theme-plan.md](development/admin-theme-plan.md) | แผนพัฒนา Beyondary Admin theme (semi-dark UX/UI) |
 | [development/claude.md](development/claude.md) | คำแนะนำสำหรับ Claude Code |
 | [mockup/thai_handmade_global_store.html](mockup/thai_handmade_global_store.html) | HTML mockup ต้นฉบับ — Beyondary storefront |
+| [mockup/beyondary_admin_dashboard.html](mockup/beyondary_admin_dashboard.html) | HTML mockup — Beyondary admin (semi-dark) |
 
 ## Cursor Rules
 
