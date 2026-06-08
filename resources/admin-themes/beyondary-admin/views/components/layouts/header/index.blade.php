@@ -156,6 +156,7 @@
     position="left"
     width="280px"
     :mobile-full-width="false"
+    :lock-body-scroll="false"
     ref="sidebarMenuDrawer"
     class="beyondary-admin-mobile-sidebar-drawer"
 >

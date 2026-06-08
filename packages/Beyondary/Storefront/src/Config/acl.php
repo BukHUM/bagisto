@@ -37,4 +37,14 @@ return [
         ],
         'sort' => 4,
     ],
+    [
+        'key' => 'beyondary.admin_theme',
+        'name' => 'beyondary-storefront::app.acl.admin_theme',
+        'route' => [
+            'admin.beyondary.admin-theme.index',
+            'admin.beyondary.admin-theme.update',
+            'admin.beyondary.admin-theme.settings.update',
+        ],
+        'sort' => 5,
+    ],
 ];

@@ -3,6 +3,7 @@
     'position' => 'right',
     'width'    => '500px',
     'mobileFullWidth' => true,
+    'lockBodyScroll' => true,
 ])
 
 <v-drawer
@@ -11,6 +12,7 @@
     position="{{ $position }}"
     width="{{ $width }}"
     :mobile-full-width="{{ $mobileFullWidth ? 'true' : 'false' }}"
+    :lock-body-scroll="{{ $lockBodyScroll ? 'true' : 'false' }}"
 >
     @isset($toggle)
         <template v-slot:toggle>
@@ -147,6 +149,10 @@
                     type: Boolean,
                     default: true,
                 },
+                lockBodyScroll: {
+                    type: Boolean,
+                    default: true,
+                },
             },
 
             data() {
@@ -176,13 +182,25 @@
             },
 
             methods: {
+                lockPageScroll() {
+                    if (this.lockBodyScroll) {
+                        document.body.style.overflow = 'hidden';
+                    }
+                },
+
+                unlockPageScroll() {
+                    if (this.lockBodyScroll) {
+                        document.body.style.overflow = 'auto';
+                    }
+                },
+
                 toggle() {
                     this.isOpen = ! this.isOpen;
 
                     if (this.isOpen) {
-                        document.body.style.overflow = 'hidden';
+                        this.lockPageScroll();
                     } else {
-                        document.body.style.overflow ='auto';
+                        this.unlockPageScroll();
                     }
 
                     this.$emit('toggle', { isActive: this.isOpen });
@@ -191,7 +209,7 @@
                 open() {
                     this.isOpen = true;
 
-                    document.body.style.overflow = 'hidden';
+                    this.lockPageScroll();
 
                     this.$emit('open', { isActive: this.isOpen });
                 },
@@ -199,7 +217,7 @@
                 close() {
                     this.isOpen = false;
 
-                    document.body.style.overflow = 'auto';
+                    this.unlockPageScroll();
 
                     this.$emit('close', { isActive: this.isOpen });
                 }

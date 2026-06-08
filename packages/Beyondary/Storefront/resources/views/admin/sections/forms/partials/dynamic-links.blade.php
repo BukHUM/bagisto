@@ -8,6 +8,7 @@
     'urlLabel' => '',
     'addLabel' => '',
     'removeLabel' => '',
+    'emptyLabel' => '',
 ])
 
 <v-beyondary-dynamic-links
@@ -20,15 +21,21 @@
     url-label="{{ $urlLabel }}"
     add-label="{{ $addLabel }}"
     remove-label="{{ $removeLabel }}"
+    empty-label="{{ $emptyLabel ?: __('beyondary-storefront::app.forms.common.empty_label') }}"
+    items-label="{{ __('beyondary-storefront::app.forms.common.items_count') }}"
 ></v-beyondary-dynamic-links>
 
 @pushOnce('scripts')
     <script type="text/x-template" id="v-beyondary-dynamic-links-template">
-        <div>
-            <div class="mb-4 flex items-center justify-end">
+        <div class="sf-dynamic-links">
+            <div class="sf-dynamic-links__toolbar">
+                <p class="sf-dynamic-links__count">
+                    @{{ itemsLabel.replace(':count', links.length) }}
+                </p>
+
                 <button
                     type="button"
-                    class="secondary-button"
+                    class="secondary-button text-sm"
                     :disabled="maxRows !== null && links.length >= maxRows"
                     @click="addLink"
                 >
@@ -36,59 +43,70 @@
                 </button>
             </div>
 
-            <div class="space-y-4">
-                <div
+            <div class="space-y-2">
+                <details
                     v-for="(link, index) in links"
                     :key="index"
-                    class="rounded border border-gray-200 p-4 dark:border-gray-800"
+                    class="sf-form-panel sf-dynamic-link"
+                    :open="link._expanded || undefined"
                 >
-                    <div class="mb-3 flex items-center justify-between gap-3">
-                        <p class="text-sm font-semibold text-gray-800 dark:text-white">
-                            @{{ rowLabel.replace(':n', index + 1) }}
-                        </p>
+                    <summary class="sf-form-panel__summary">
+                        <div class="sf-form-panel__head">
+                            <p class="sf-form-panel__title">
+                                @{{ rowLabel.replace(':n', index + 1) }}
+                            </p>
+                            <p class="sf-form-panel__hint sf-dynamic-link__preview">
+                                @{{ link.title || emptyLabel }}
+                            </p>
+                        </div>
 
                         <button
                             v-if="links.length > minRows"
                             type="button"
-                            class="text-sm text-red-600 transition hover:underline dark:text-red-400"
-                            @click="removeLink(index)"
+                            class="sf-dynamic-link__remove"
+                            @click.stop="removeLink(index)"
                         >
                             @{{ removeLabel }}
                         </button>
-                    </div>
 
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">
-                                @{{ titleLabel }}
-                            </label>
-                            <input
-                                type="text"
-                                class="w-full rounded-md border px-3 py-2 text-sm text-gray-600 transition hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
-                                v-model="link.title"
-                                :name="`${namePrefix}[${index}][title]`"
-                            >
+                        <span class="icon-arrow-down sf-form-panel__chevron" aria-hidden="true"></span>
+                    </summary>
+
+                    <div class="sf-form-panel__body">
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div>
+                                <label class="mb-1 block text-xs font-medium text-admin-muted">
+                                    @{{ titleLabel }}
+                                </label>
+                                <input
+                                    type="text"
+                                    class="w-full rounded-sm border border-admin-border bg-white px-3 py-2 text-sm text-admin-text transition hover:border-admin-primary/40 focus:border-admin-primary focus:outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                                    v-model="link.title"
+                                    :name="`${namePrefix}[${index}][title]`"
+                                >
+                            </div>
+
+                            <div>
+                                <label class="mb-1 block text-xs font-medium text-admin-muted">
+                                    @{{ urlLabel }}
+                                </label>
+                                <input
+                                    type="text"
+                                    class="w-full rounded-sm border border-admin-border bg-white px-3 py-2 text-sm text-admin-text transition hover:border-admin-primary/40 focus:border-admin-primary focus:outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                                    v-model="link.url"
+                                    :name="`${namePrefix}[${index}][url]`"
+                                    placeholder="https://"
+                                >
+                            </div>
                         </div>
 
-                        <div>
-                            <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">
-                                @{{ urlLabel }}
-                            </label>
-                            <input
-                                type="text"
-                                class="w-full rounded-md border px-3 py-2 text-sm text-gray-600 transition hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
-                                v-model="link.url"
-                                :name="`${namePrefix}[${index}][url]`"
-                            >
-                        </div>
+                        <input
+                            type="hidden"
+                            :name="`${namePrefix}[${index}][sort_order]`"
+                            :value="index + 1"
+                        >
                     </div>
-
-                    <input
-                        type="hidden"
-                        :name="`${namePrefix}[${index}][sort_order]`"
-                        :value="index + 1"
-                    >
-                </div>
+                </details>
             </div>
         </div>
     </script>
@@ -134,6 +152,14 @@
                     type: String,
                     default: 'Remove',
                 },
+                emptyLabel: {
+                    type: String,
+                    default: 'Not set',
+                },
+                itemsLabel: {
+                    type: String,
+                    default: ':count items',
+                },
             },
 
             data() {
@@ -142,8 +168,9 @@
                         title: link.title ?? '',
                         url: link.url ?? '',
                         sort_order: link.sort_order ?? index + 1,
+                        _expanded: false,
                     }))
-                    : [{ title: '', url: '', sort_order: 1 }];
+                    : [{ title: '', url: '', sort_order: 1, _expanded: false }];
 
                 return { links };
             },
@@ -158,6 +185,7 @@
                         title: '',
                         url: '',
                         sort_order: this.links.length + 1,
+                        _expanded: true,
                     });
                 },
 

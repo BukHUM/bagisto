@@ -15,4 +15,11 @@ return [
         'sort' => 1,
         'icon' => '',
     ],
+    [
+        'key' => 'beyondary.admin_theme',
+        'name' => 'beyondary-storefront::app.menu.admin_theme',
+        'route' => 'admin.beyondary.admin-theme.index',
+        'sort' => 2,
+        'icon' => '',
+    ],
 ];

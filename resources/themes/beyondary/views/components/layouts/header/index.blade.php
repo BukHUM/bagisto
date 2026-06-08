@@ -70,7 +70,7 @@
             @endif
 
             <div class="text-brand-dark/80 hover:text-brand-gold transition relative flex items-center">
-                <x-shop::checkout.cart.mini-cart />
+                @include('shop::checkout.cart.mini-cart')
             </div>
         </div>
     </div>

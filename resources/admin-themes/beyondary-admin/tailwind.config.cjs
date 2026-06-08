@@ -5,6 +5,11 @@ const adminPackageViews = path.join(
     "../../../packages/Webkul/Admin/src/Resources"
 );
 
+const beyondaryStorefrontViews = path.join(
+    __dirname,
+    "../../../packages/Beyondary/Storefront/resources/views"
+);
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
@@ -12,6 +17,7 @@ module.exports = {
         "./assets/**/*.js",
         path.join(adminPackageViews, "**/*.blade.php"),
         path.join(adminPackageViews, "**/*.js"),
+        path.join(beyondaryStorefrontViews, "**/*.blade.php"),
     ],
 
     theme: {
@@ -55,8 +61,8 @@ module.exports = {
             },
 
             fontFamily: {
-                sans: ["Prompt", "ui-sans-serif", "system-ui", "sans-serif"],
-                display: ["Playfair Display", "ui-serif", "Georgia", "serif"],
+                sans: ["var(--admin-font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+                display: ["var(--admin-font-display)", "ui-serif", "Georgia", "serif"],
                 icon: ["bagisto-admin"],
             },
         },
@@ -77,5 +83,29 @@ module.exports = {
         "focus:ring-admin-primary/30",
         "focus-within:ring-2",
         "focus-within:ring-admin-primary/30",
+        "admin-theme-option",
+        "admin-theme-option--active",
+        "admin-theme-settings-grid",
+        "admin-theme-color-input",
+        "accent-admin-primary",
+        "sf-page-map",
+        "sf-page-map__chrome",
+        "sf-page-map__viewport",
+        "sf-page-map__block",
+        "sf-page-map__block--active",
+        "sf-page-map__thumb",
+        "sf-page-map__label",
+        "sf-section-preview",
+        "sf-section-preview--compact",
+        "sf-section-card",
+        "sf-section-card__preview",
+        "sf-section-card__body",
+        "sf-section-card__order",
+        "sf-section-card__badge",
+        "sf-section-card__badge--active",
+        "sf-section-card__badge--missing",
+        "sf-section-card__action",
+        "sf-zone-label",
+        "line-clamp-2",
     ],
 };

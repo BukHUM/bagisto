@@ -29,6 +29,7 @@ class SectionController extends Controller
             'currentLocale' => $currentLocale,
             'formPartial' => 'beyondary-storefront::admin.sections.forms.'.$section,
             'backUrl' => route('admin.beyondary.storefront.index'),
+            'storefrontUrl' => route('shop.home.index'),
         ]);
     }
 

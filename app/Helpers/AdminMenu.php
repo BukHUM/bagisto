@@ -74,6 +74,7 @@ class AdminMenu
 
         // Beyondary
         'beyondary.storefront' => 'icon-store',
+        'beyondary.admin_theme' => 'icon-theme',
     ];
 
     /**

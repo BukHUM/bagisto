@@ -123,6 +123,9 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 | Export / Import | ZIP v2 (พร้อมรูป) + JSON v1 · `beyondary:storefront:export\|import\|install-preset` |
 | Transfer service | `StorefrontTransferService.php` — remap `storage/theme/{id}/` ตอน import |
 | Theme wire-up | `resources/themes/beyondary/views/home/` (Phase 1) |
+| Shop asset fallback | `BeyondaryShopTheme` + `BeyondaryThemes` — child theme Vite manifest ไม่มี `images/*` จาก parent view จะ fallback ไป parent/shop แทน `abort(404)` |
+| Product slug (TH locale) | `ProductsCategoriesProxyController` override — ไม่ reject product ที่ `findBySlug()` เจอแล้วเพราะ `url_key` ของ locale ว่าง |
+| Product url_key backfill | `database/migrations/2026_06_08_220000_*`, `221000_*` — copy `url_key` EN → locale อื่นใน `product_flat` + `product_attribute_values` |
 
 **หลังอัปเกรด:** ตรวจ `ThemeCustomizationRepository` API ยังตรงกับ controller ใน package — **ไม่แก้** `packages/Webkul/Admin`
 
@@ -162,6 +165,8 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 ## Post-Upgrade Test Checklist
 
 - [ ] Storefront `GET /` → HTTP 200, theme `beyondary`
+- [ ] Product detail (slug) → HTTP 200
+- [ ] `GET /checkout/cart`, `/search`, `/compare` → HTTP 200
 - [ ] Admin login + Sales → Orders (ตรวจ N+1 / โหลดเร็ว)
 - [ ] ค้นหาสินค้า (EN FULLTEXT + ไทย LIKE + `url_key`)
 - [ ] Add to cart / mini-cart

@@ -2,6 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        --admin-font-sans: "Prompt", ui-sans-serif, system-ui, sans-serif;
+        --admin-font-display: "Playfair Display", ui-serif, Georgia, serif;
+        --admin-base-size: 14px;
+        --admin-primary: #b88b54;
+        --admin-primary-hover: #9a7345;
+        --admin-sidebar: #2e2720;
+        --admin-sidebar-hover: #3a3229;
+        --admin-sidebar-active: var(--admin-primary);
+        --admin-sidebar-text: #e8e2d9;
+        --admin-sidebar-muted: #a89b8c;
+        --admin-sidebar-submenu: #231f1a;
+        --admin-sidebar-submenu-text: #c9bfb0;
+        --admin-surface: #f8f6f0;
+        --admin-card: #ffffff;
+        --admin-border: #e5dfd4;
+        --admin-text: #3a2618;
+        --admin-muted: #6b4a31;
+        --admin-radius: 0.125rem;
+        --admin-density-scale: 1;
+    }
+
+    html {
+        font-size: calc(var(--admin-base-size) * var(--admin-density-scale));
+    }
+
+    body {
+        font-family: var(--admin-font-sans);
+        color: var(--admin-text);
+    }
+
+    .bg-admin-primary {
+        background-color: var(--admin-primary);
+    }
+
+    .bg-admin-primary-hover,
+    .hover\:bg-admin-primary-hover:hover {
+        background-color: var(--admin-primary-hover);
+    }
+
+    .bg-admin-surface {
+        background-color: var(--admin-surface);
+    }
+
+    .bg-admin-card {
+        background-color: var(--admin-card);
+    }
+
+    .bg-admin-sidebar {
+        background-color: var(--admin-sidebar);
+    }
+
+    .text-admin-primary {
+        color: var(--admin-primary);
+    }
+
+    .text-admin-text {
+        color: var(--admin-text);
+    }
+
+    .text-admin-muted {
+        color: var(--admin-text-muted, var(--admin-muted));
+    }
+
+    .border-admin-primary {
+        border-color: var(--admin-primary);
+    }
+
+    .border-admin-border {
+        border-color: var(--admin-border);
+    }
+}
+
 @font-face {
     font-family: "bagisto-admin";
     src: url("../fonts/bagisto-admin.woff?jwnnow") format("woff");
@@ -392,11 +466,13 @@
     }
 
     .primary-button {
-        @apply flex cursor-pointer place-content-center items-center gap-x-1 rounded-md border border-admin-primary-hover bg-admin-primary px-3 py-1.5 font-semibold text-white transition-all hover:bg-admin-primary-hover focus:opacity-90;
+        @apply flex cursor-pointer place-content-center items-center gap-x-1 border border-admin-primary-hover bg-admin-primary px-3 py-1.5 font-semibold text-white transition-all hover:bg-admin-primary-hover focus:opacity-90;
+        border-radius: var(--admin-radius);
     }
 
     .secondary-button {
-        @apply flex cursor-pointer place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-admin-primary bg-admin-card px-3 py-1.5 font-semibold text-admin-primary transition-all hover:bg-admin-primary/10 focus:bg-admin-primary/10;
+        @apply flex cursor-pointer place-content-center items-center gap-x-1 whitespace-nowrap border-2 border-admin-primary bg-admin-card px-3 py-1.5 font-semibold text-admin-primary transition-all hover:bg-admin-primary/10 focus:bg-admin-primary/10;
+        border-radius: var(--admin-radius);
     }
 
     .transparent-button {
@@ -929,6 +1005,7 @@
 
     .box-shadow {
         @apply border-admin-border bg-admin-card shadow-sm;
+        border-radius: var(--admin-radius);
     }
 
     .peer-checked\:text-blue-600 {
@@ -949,5 +1026,311 @@
 
     .focus\:ring-blue-300:focus {
         @apply ring-admin-primary/30;
+    }
+
+    .admin-theme-option {
+        @apply flex cursor-pointer items-start gap-3 rounded-sm border border-admin-border bg-admin-card p-4 transition-all hover:border-admin-muted;
+    }
+
+    .admin-theme-option--active {
+        @apply border-2 border-admin-primary bg-admin-surface shadow-sm;
+    }
+
+    .admin-theme-option input[type="radio"] {
+        @apply mt-1 h-4 w-4 shrink-0 border-admin-border text-admin-primary focus:ring-2 focus:ring-admin-primary/30;
+        accent-color: var(--admin-primary);
+    }
+
+    .admin-theme-settings-grid {
+        @apply grid gap-4 sm:grid-cols-2;
+    }
+
+    .admin-theme-color-input {
+        @apply h-10 w-full cursor-pointer rounded-sm border border-admin-border bg-admin-card;
+    }
+
+    .admin-font-preview {
+        min-height: 3.25rem;
+        line-height: 1.5;
+    }
+
+    .sf-page-mockup {
+        @apply overflow-hidden rounded-sm border border-admin-border bg-white shadow-sm;
+    }
+
+    .sf-page-mockup__chrome {
+        @apply flex items-center gap-1.5 border-b border-admin-border bg-admin-surface px-3 py-2;
+    }
+
+    .sf-page-mockup__chrome > span:not(.sf-page-mockup__url) {
+        @apply h-2.5 w-2.5 rounded-full bg-admin-border;
+    }
+
+    .sf-page-mockup__url {
+        @apply ml-2 truncate text-[10px] text-admin-muted;
+    }
+
+    .sf-page-mockup__viewport {
+        @apply flex flex-col bg-[#F8F6F0];
+    }
+
+    .sf-page-mockup__zone {
+        @apply relative block w-full overflow-hidden border-0 transition-all;
+    }
+
+    a.sf-page-mockup__zone {
+        @apply cursor-pointer no-underline;
+    }
+
+    .sf-page-mockup__zone--menu {
+        @apply min-h-[3rem];
+    }
+
+    .sf-page-mockup__zone--hero {
+        @apply min-h-[8.75rem];
+    }
+
+    .sf-page-mockup__zone--trust {
+        @apply min-h-[2.75rem] border-y border-[#E5DFD4]/80 bg-white;
+    }
+
+    .sf-page-mockup__zone--categories,
+    .sf-page-mockup__zone--products,
+    .sf-page-mockup__zone--our_story {
+        @apply min-h-[4.5rem];
+    }
+
+    .sf-page-mockup__zone--footer {
+        @apply min-h-[3.25rem];
+    }
+
+    .sf-page-mockup__art {
+        @apply h-full w-full;
+    }
+
+    .sf-page-mockup__art .sf-section-preview {
+        @apply h-full min-h-0;
+    }
+
+    .sf-page-mockup__overlay {
+        @apply pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-[#3A2618]/0 px-3 text-center opacity-0 transition-all duration-200;
+    }
+
+    a.sf-page-mockup__zone:hover .sf-page-mockup__overlay,
+    a.sf-page-mockup__zone:focus-visible .sf-page-mockup__overlay {
+        @apply bg-[#3A2618]/55 opacity-100;
+    }
+
+    .sf-page-mockup__label {
+        @apply text-[11px] font-semibold text-white;
+    }
+
+    .sf-page-mockup__hint {
+        @apply text-[10px] text-white/80;
+    }
+
+    .sf-page-mockup__zone--active::before {
+        content: '';
+        @apply absolute left-0 top-0 z-10 h-full w-1 bg-admin-primary;
+    }
+
+    a.sf-page-mockup__zone:focus-visible {
+        @apply outline-none ring-2 ring-inset ring-admin-primary;
+    }
+
+    .sf-section-preview {
+        @apply h-14 w-full;
+    }
+
+    .sf-section-preview--compact {
+        @apply h-full min-h-[2.5rem];
+    }
+
+    .sf-section-accordion {
+        @apply overflow-hidden rounded-sm border border-admin-border bg-admin-card;
+    }
+
+    .sf-section-accordion__summary {
+        @apply flex cursor-pointer list-none items-center gap-3 px-3 py-2.5 transition-colors hover:bg-admin-surface/60;
+    }
+
+    .sf-section-accordion__summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .sf-section-accordion[open] > .sf-section-accordion__summary {
+        @apply border-b border-admin-border bg-admin-surface/40;
+    }
+
+    .sf-section-accordion__thumb {
+        @apply h-10 w-16 shrink-0 overflow-hidden rounded-sm border border-admin-border bg-admin-surface;
+    }
+
+    .sf-section-accordion__head {
+        @apply flex min-w-0 flex-1 flex-wrap items-start justify-between gap-2;
+    }
+
+    .sf-section-accordion__chevron {
+        @apply shrink-0 text-base text-admin-muted transition-transform duration-200;
+    }
+
+    .sf-section-accordion[open] .sf-section-accordion__chevron {
+        @apply rotate-180;
+    }
+
+    .sf-section-accordion__edit {
+        @apply shrink-0 rounded-sm px-2 py-1 text-xs font-semibold text-admin-primary no-underline hover:bg-admin-primary/10;
+    }
+
+    .sf-section-accordion__body {
+        @apply space-y-2 px-3 py-3;
+    }
+
+    .sf-section-card__order {
+        @apply mr-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-admin-primary/15 text-[10px] font-bold text-admin-primary;
+    }
+
+    .sf-section-card__badge {
+        @apply shrink-0 rounded-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide;
+    }
+
+    .sf-section-card__badge--active {
+        @apply bg-emerald-100 text-emerald-800;
+    }
+
+    .sf-section-card__badge--missing {
+        @apply bg-admin-surface text-admin-muted;
+    }
+
+    .sf-section-card__action {
+        @apply mt-2 inline-flex items-center gap-1 text-xs font-semibold text-admin-primary;
+    }
+
+    .sf-zone-label {
+        @apply rounded-sm bg-admin-primary/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-admin-primary;
+    }
+
+    .sf-section-edit__header {
+        @apply flex flex-wrap items-start justify-between gap-4;
+    }
+
+    .sf-section-edit__preview {
+        @apply h-14 w-24 shrink-0 overflow-hidden rounded-sm border border-admin-border bg-[#F8F6F0];
+    }
+
+    .sf-section-edit__preview .sf-section-preview {
+        @apply h-full min-h-0;
+    }
+
+    .sf-section-edit__back {
+        @apply inline-flex items-center gap-1 text-xs font-semibold text-admin-primary no-underline hover:underline;
+    }
+
+    .sf-section-edit__toolbar {
+        @apply mt-5 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-admin-border bg-admin-card px-4 py-3;
+    }
+
+    .sf-section-edit__status {
+        @apply flex items-center gap-2 text-sm text-admin-text;
+    }
+
+    .sf-locale-tabs {
+        @apply flex flex-wrap gap-1;
+    }
+
+    .sf-locale-tabs__item {
+        @apply rounded-sm px-3 py-1.5 text-sm text-admin-muted no-underline transition hover:bg-admin-surface;
+    }
+
+    .sf-locale-tabs__item--active {
+        @apply bg-admin-primary/15 font-semibold text-admin-primary;
+    }
+
+    .sf-section-edit__layout {
+        @apply mt-6 grid gap-6 xl:grid-cols-12;
+    }
+
+    .sf-section-edit__aside {
+        @apply xl:col-span-4;
+    }
+
+    .sf-section-edit__aside-preview {
+        @apply overflow-hidden rounded-sm border border-admin-border bg-[#F8F6F0];
+    }
+
+    .sf-section-edit__aside-preview .sf-section-preview {
+        @apply h-28 min-h-0;
+    }
+
+    .sf-section-edit__form {
+        @apply xl:col-span-8;
+    }
+
+    .sf-form-panel {
+        @apply overflow-hidden rounded-sm border border-admin-border bg-admin-card;
+    }
+
+    .sf-form-panel .sf-form-panel {
+        @apply border-admin-border/70 bg-admin-surface/40;
+    }
+
+    .sf-form-panel__summary {
+        @apply flex cursor-pointer list-none items-center gap-3 px-4 py-3 transition-colors hover:bg-admin-surface/60;
+    }
+
+    .sf-form-panel__summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .sf-form-panel[open] > .sf-form-panel__summary {
+        @apply border-b border-admin-border bg-admin-surface/40;
+    }
+
+    .sf-form-panel__head {
+        @apply min-w-0 flex-1;
+    }
+
+    .sf-form-panel__title {
+        @apply text-sm font-semibold text-admin-text;
+    }
+
+    .sf-form-panel__hint {
+        @apply mt-0.5 truncate text-xs text-admin-muted;
+    }
+
+    .sf-form-panel__badge {
+        @apply shrink-0 rounded-full bg-admin-primary/15 px-2 py-0.5 text-[10px] font-bold text-admin-primary;
+    }
+
+    .sf-form-panel__chevron {
+        @apply shrink-0 text-base text-admin-muted transition-transform duration-200;
+    }
+
+    .sf-form-panel[open] > .sf-form-panel__summary .sf-form-panel__chevron {
+        @apply rotate-180;
+    }
+
+    .sf-form-panel__body {
+        @apply px-4 py-4;
+    }
+
+    .sf-dynamic-links__toolbar {
+        @apply mb-3 flex flex-wrap items-center justify-between gap-2;
+    }
+
+    .sf-dynamic-links__count {
+        @apply text-xs text-admin-muted;
+    }
+
+    .sf-dynamic-link__preview {
+        @apply italic;
+    }
+
+    .sf-dynamic-link__remove {
+        @apply shrink-0 rounded-sm px-2 py-1 text-xs font-semibold text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30;
+    }
+
+    .font-display {
+        font-family: var(--admin-font-display);
     }
 }

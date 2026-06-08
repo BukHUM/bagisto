@@ -10,48 +10,57 @@
     }
 @endphp
 
-<x-admin::form.control-group>
-    <x-admin::form.control-group.label class="required">
-        @lang('beyondary-storefront::app.forms.footer.about')
-    </x-admin::form.control-group.label>
-    <x-admin::form.control-group.control
-        type="textarea"
-        name="about"
-        rules="required"
-        :value="$options['about'] ?? $defaults['about']"
-        rows="4"
-    />
-</x-admin::form.control-group>
-
-<div class="mt-6 grid gap-4 md:grid-cols-3">
+<x-beyondary-storefront::form-panel
+    :title="__('beyondary-storefront::app.forms.footer.about')"
+    :default-open="true"
+>
     <x-admin::form.control-group>
-        <x-admin::form.control-group.label>@lang('beyondary-storefront::app.forms.footer.facebook')</x-admin::form.control-group.label>
-        <x-admin::form.control-group.control type="text" name="social_facebook" :value="$social['facebook'] ?? '#'" />
+        <x-admin::form.control-group.label class="required">
+            @lang('beyondary-storefront::app.forms.footer.about')
+        </x-admin::form.control-group.label>
+        <x-admin::form.control-group.control
+            type="textarea"
+            name="about"
+            rules="required"
+            :value="$options['about'] ?? $defaults['about']"
+            rows="4"
+        />
     </x-admin::form.control-group>
-    <x-admin::form.control-group>
-        <x-admin::form.control-group.label>@lang('beyondary-storefront::app.forms.footer.instagram')</x-admin::form.control-group.label>
-        <x-admin::form.control-group.control type="text" name="social_instagram" :value="$social['instagram'] ?? '#'" />
-    </x-admin::form.control-group>
-    <x-admin::form.control-group>
-        <x-admin::form.control-group.label>@lang('beyondary-storefront::app.forms.footer.pinterest')</x-admin::form.control-group.label>
-        <x-admin::form.control-group.control type="text" name="social_pinterest" :value="$social['pinterest'] ?? '#'" />
-    </x-admin::form.control-group>
-</div>
+</x-beyondary-storefront::form-panel>
 
-<p class="mb-3 mt-8 text-sm font-semibold text-gray-800 dark:text-white">
-    @lang('beyondary-storefront::app.forms.footer.support_links')
-</p>
-<p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-    @lang('beyondary-storefront::app.forms.footer.support_help')
-</p>
+<x-beyondary-storefront::form-panel
+    :title="__('beyondary-storefront::app.forms.footer.social_title')"
+    :hint="__('beyondary-storefront::app.forms.footer.social_help')"
+>
+    <div class="grid gap-4 md:grid-cols-3">
+        <x-admin::form.control-group>
+            <x-admin::form.control-group.label>@lang('beyondary-storefront::app.forms.footer.facebook')</x-admin::form.control-group.label>
+            <x-admin::form.control-group.control type="text" name="social_facebook" :value="$social['facebook'] ?? '#'" />
+        </x-admin::form.control-group>
+        <x-admin::form.control-group>
+            <x-admin::form.control-group.label>@lang('beyondary-storefront::app.forms.footer.instagram')</x-admin::form.control-group.label>
+            <x-admin::form.control-group.control type="text" name="social_instagram" :value="$social['instagram'] ?? '#'" />
+        </x-admin::form.control-group>
+        <x-admin::form.control-group>
+            <x-admin::form.control-group.label>@lang('beyondary-storefront::app.forms.footer.pinterest')</x-admin::form.control-group.label>
+            <x-admin::form.control-group.control type="text" name="social_pinterest" :value="$social['pinterest'] ?? '#'" />
+        </x-admin::form.control-group>
+    </div>
+</x-beyondary-storefront::form-panel>
 
-@include('beyondary-storefront::admin.sections.forms.partials.dynamic-links', [
-    'initialLinks' => $supportLinks,
-    'namePrefix' => 'links',
-    'minRows' => 1,
-    'rowLabel' => __('beyondary-storefront::app.forms.footer.link_row'),
-    'titleLabel' => __('beyondary-storefront::app.forms.footer.link_title'),
-    'urlLabel' => __('beyondary-storefront::app.forms.footer.link_url'),
-    'addLabel' => __('beyondary-storefront::app.forms.common.add_link'),
-    'removeLabel' => __('beyondary-storefront::app.forms.common.remove_link'),
-])
+<x-beyondary-storefront::form-panel
+    :title="__('beyondary-storefront::app.forms.footer.support_links')"
+    :hint="__('beyondary-storefront::app.forms.footer.support_help')"
+    :badge="count($supportLinks)"
+>
+    @include('beyondary-storefront::admin.sections.forms.partials.dynamic-links', [
+        'initialLinks' => $supportLinks,
+        'namePrefix' => 'links',
+        'minRows' => 1,
+        'rowLabel' => __('beyondary-storefront::app.forms.footer.link_row'),
+        'titleLabel' => __('beyondary-storefront::app.forms.footer.link_title'),
+        'urlLabel' => __('beyondary-storefront::app.forms.footer.link_url'),
+        'addLabel' => __('beyondary-storefront::app.forms.common.add_link'),
+        'removeLabel' => __('beyondary-storefront::app.forms.common.remove_link'),
+    ])
+</x-beyondary-storefront::form-panel>

@@ -22,57 +22,71 @@ class HomeSectionService
     public const FOOTER_NAME = 'Beyondary — Footer';
 
     /**
-     * @var array<string, array{label: string, type: string, singleton: bool, sort_order: int, default_name: string}>
+     * @var array<string, array{label: string, type: string, singleton: bool, sort_order: int, default_name: string, zone: string, preview: string}>
      */
     public const SECTIONS = [
+        'menu' => [
+            'label' => 'Header Menu',
+            'type' => ThemeCustomizationModel::STATIC_CONTENT,
+            'singleton' => true,
+            'sort_order' => 10,
+            'default_name' => self::NAVIGATION_NAME,
+            'zone' => 'layout',
+            'preview' => 'menu',
+        ],
         'hero' => [
             'label' => 'Hero / Slider',
             'type' => ThemeCustomizationModel::IMAGE_CAROUSEL,
             'singleton' => true,
-            'sort_order' => 1,
+            'sort_order' => 20,
             'default_name' => 'Beyondary — Hero',
+            'zone' => 'homepage',
+            'preview' => 'hero',
         ],
         'trust' => [
             'label' => 'Trust Badges',
             'type' => ThemeCustomizationModel::SERVICES_CONTENT,
             'singleton' => true,
-            'sort_order' => 2,
+            'sort_order' => 30,
             'default_name' => 'Beyondary — Trust Badges',
+            'zone' => 'homepage',
+            'preview' => 'trust',
         ],
         'categories' => [
             'label' => 'Categories',
             'type' => ThemeCustomizationModel::CATEGORY_CAROUSEL,
             'singleton' => true,
-            'sort_order' => 3,
+            'sort_order' => 40,
             'default_name' => 'Beyondary — Categories',
+            'zone' => 'homepage',
+            'preview' => 'categories',
         ],
         'products' => [
             'label' => 'Featured Products',
             'type' => ThemeCustomizationModel::PRODUCT_CAROUSEL,
             'singleton' => true,
-            'sort_order' => 4,
+            'sort_order' => 50,
             'default_name' => 'Beyondary — Featured Products',
+            'zone' => 'homepage',
+            'preview' => 'products',
         ],
         'our_story' => [
             'label' => 'Our Story',
             'type' => ThemeCustomizationModel::STATIC_CONTENT,
             'singleton' => true,
-            'sort_order' => 5,
+            'sort_order' => 60,
             'default_name' => self::OUR_STORY_NAME,
-        ],
-        'menu' => [
-            'label' => 'Header Menu',
-            'type' => ThemeCustomizationModel::STATIC_CONTENT,
-            'singleton' => true,
-            'sort_order' => 20,
-            'default_name' => self::NAVIGATION_NAME,
+            'zone' => 'homepage',
+            'preview' => 'our_story',
         ],
         'footer' => [
             'label' => 'Footer',
             'type' => ThemeCustomizationModel::FOOTER_LINKS,
             'singleton' => true,
-            'sort_order' => 21,
+            'sort_order' => 70,
             'default_name' => self::FOOTER_NAME,
+            'zone' => 'layout',
+            'preview' => 'footer',
         ],
     ];
 

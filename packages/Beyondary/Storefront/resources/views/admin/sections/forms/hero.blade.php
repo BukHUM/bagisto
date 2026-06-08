@@ -5,60 +5,62 @@
     }
 @endphp
 
-<p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-    @lang('beyondary-storefront::app.forms.hero.help')
-</p>
+<x-beyondary-storefront::form-panel
+    :title="__('beyondary-storefront::app.forms.hero.slides_title')"
+    :hint="__('beyondary-storefront::app.forms.hero.help')"
+    :badge="count($slides)"
+    :default-open="true"
+>
+    <div class="space-y-2">
+        @foreach ($slides as $index => $slide)
+            <x-beyondary-storefront::form-panel
+                :title="__('beyondary-storefront::app.forms.hero.slide', ['n' => $index + 1])"
+                :hint="$slide['title'] ?: __('beyondary-storefront::app.forms.common.empty_label')"
+            >
+                @if (! empty($slide['image']))
+                    <input type="hidden" name="slides[{{ $index }}][existing_image]" value="{{ $slide['image'] }}">
+                    <img
+                        src="{{ str_starts_with($slide['image'], 'http') ? $slide['image'] : asset($slide['image']) }}"
+                        alt=""
+                        class="mb-3 h-28 w-auto rounded-sm object-cover"
+                    >
+                @endif
 
-<div class="space-y-6">
-    @foreach ($slides as $index => $slide)
-        <div class="rounded border border-gray-200 p-4 dark:border-gray-800">
-            <p class="mb-3 text-sm font-semibold text-gray-800 dark:text-white">
-                @lang('beyondary-storefront::app.forms.hero.slide', ['n' => $index + 1])
-            </p>
+                <div class="grid gap-4 md:grid-cols-2">
+                    <x-admin::form.control-group>
+                        <x-admin::form.control-group.label>
+                            @lang('beyondary-storefront::app.forms.hero.title')
+                        </x-admin::form.control-group.label>
+                        <x-admin::form.control-group.control
+                            type="text"
+                            name="slides[{{ $index }}][title]"
+                            :value="$slide['title'] ?? ''"
+                        />
+                    </x-admin::form.control-group>
 
-            @if (! empty($slide['image']))
-                <input type="hidden" name="slides[{{ $index }}][existing_image]" value="{{ $slide['image'] }}">
-                <img
-                    src="{{ str_starts_with($slide['image'], 'http') ? $slide['image'] : asset($slide['image']) }}"
-                    alt=""
-                    class="mb-3 h-24 w-auto rounded object-cover"
-                >
-            @endif
+                    <x-admin::form.control-group>
+                        <x-admin::form.control-group.label>
+                            @lang('beyondary-storefront::app.forms.hero.link')
+                        </x-admin::form.control-group.label>
+                        <x-admin::form.control-group.control
+                            type="text"
+                            name="slides[{{ $index }}][link]"
+                            :value="$slide['link'] ?? ''"
+                        />
+                    </x-admin::form.control-group>
+                </div>
 
-            <div class="grid gap-4 md:grid-cols-2">
-                <x-admin::form.control-group>
+                <x-admin::form.control-group class="mt-3">
                     <x-admin::form.control-group.label>
-                        @lang('beyondary-storefront::app.forms.hero.title')
+                        @lang('beyondary-storefront::app.forms.hero.image')
                     </x-admin::form.control-group.label>
                     <x-admin::form.control-group.control
-                        type="text"
-                        name="slides[{{ $index }}][title]"
-                        :value="$slide['title'] ?? ''"
+                        type="file"
+                        name="slides[{{ $index }}][image]"
+                        accept="image/*"
                     />
                 </x-admin::form.control-group>
-
-                <x-admin::form.control-group>
-                    <x-admin::form.control-group.label>
-                        @lang('beyondary-storefront::app.forms.hero.link')
-                    </x-admin::form.control-group.label>
-                    <x-admin::form.control-group.control
-                        type="text"
-                        name="slides[{{ $index }}][link]"
-                        :value="$slide['link'] ?? ''"
-                    />
-                </x-admin::form.control-group>
-            </div>
-
-            <x-admin::form.control-group class="mt-3">
-                <x-admin::form.control-group.label>
-                    @lang('beyondary-storefront::app.forms.hero.image')
-                </x-admin::form.control-group.label>
-                <x-admin::form.control-group.control
-                    type="file"
-                    name="slides[{{ $index }}][image]"
-                    accept="image/*"
-                />
-            </x-admin::form.control-group>
-        </div>
-    @endforeach
-</div>
+            </x-beyondary-storefront::form-panel>
+        @endforeach
+    </div>
+</x-beyondary-storefront::form-panel>

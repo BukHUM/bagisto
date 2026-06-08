@@ -23,6 +23,16 @@
     $footerSocial = array_merge($defaultFooter['social'], $footerOptions['social'] ?? []);
     $supportLinks = $footerOptions['column_2'] ?? $defaultFooter['column_2'];
 
+    if (is_string($supportLinks)) {
+        $supportLinks = json_decode($supportLinks, true);
+    }
+
+    if (! is_array($supportLinks)) {
+        $supportLinks = $defaultFooter['column_2'];
+    }
+
+    $supportLinks = array_values($supportLinks);
+
     usort($supportLinks, fn ($a, $b) => ($a['sort_order'] ?? 0) <=> ($b['sort_order'] ?? 0));
 
     $rootCategories = collect($categoryRepository->getVisibleCategoryTree($channel->root_category_id))->take(5);
