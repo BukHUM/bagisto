@@ -3,7 +3,6 @@
 namespace Webkul\Admin\DataGrids\Sales;
 
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Webkul\DataGrid\DataGrid;
 use Webkul\Sales\Models\Order;
@@ -12,11 +11,6 @@ use Webkul\Sales\Repositories\OrderRepository;
 
 class OrderDataGrid extends DataGrid
 {
-    /**
-     * Orders with items preloaded for the current page.
-     */
-    protected Collection $ordersWithItems;
-
     /**
      * Prepare query builder.
      *
@@ -202,11 +196,7 @@ class OrderDataGrid extends DataGrid
             'type' => 'string',
             'exportable' => false,
             'closure' => function ($value) {
-                $order = $this->ordersWithItems->get($value->id);
-
-                if (! $order) {
-                    return '';
-                }
+                $order = app(OrderRepository::class)->with('items')->find($value->id);
 
                 return view('admin::sales.orders.items', compact('order'))->render();
             },
@@ -220,23 +210,6 @@ class OrderDataGrid extends DataGrid
             'filterable_type' => 'date_range',
             'sortable' => true,
         ]);
-    }
-
-    /**
-     * Preload order items for the current page to avoid N+1 queries.
-     */
-    protected function formatRecords($records): mixed
-    {
-        $orderIds = collect($records)->pluck('id')->filter()->unique()->values()->all();
-
-        $this->ordersWithItems = empty($orderIds)
-            ? collect()
-            : app(OrderRepository::class)
-                ->with(['items.product.images'])
-                ->findWhereIn('id', $orderIds)
-                ->keyBy('id');
-
-        return parent::formatRecords($records);
     }
 
     /**

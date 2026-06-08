@@ -363,12 +363,16 @@ class ProductRepository extends Repository
                 if ($attribute->code == 'name') {
                     $synonyms = $this->searchSynonymRepository->getSynonymsByQuery(urldecode($params['name']));
 
-                    $this->applyTextValueSearch($qb, $alias, $synonyms);
+                    $qb->where(function ($subQuery) use ($alias, $synonyms) {
+                        foreach ($synonyms as $synonym) {
+                            $subQuery->orWhere($alias.'.text_value', 'like', '%'.$synonym.'%');
+                        }
+                    });
                 } elseif ($attribute->code == 'url_key') {
                     if (empty($params['url_key'])) {
                         $qb->whereNotNull($alias.'.text_value');
                     } else {
-                        $qb->where($alias.'.text_value', urldecode($params['url_key']));
+                        $qb->where($alias.'.text_value', 'like', '%'.urldecode($params['url_key']).'%');
                     }
                 } else {
                     if (is_null($params[$attribute->code])) {
@@ -639,100 +643,5 @@ class ProductRepository extends Repository
         }
 
         return $query->max('attr_pav.float_value') ?? 0;
-    }
-
-    /**
-     * Apply OR-based text search across synonym terms.
-     */
-    protected function applyTextValueSearch($query, string $alias, array $terms): void
-    {
-        $terms = collect($terms)
-            ->map(fn ($term) => trim(urldecode($term)))
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
-
-        if (empty($terms)) {
-            return;
-        }
-
-        $tablePrefix = DB::getTablePrefix();
-
-        $query->where(function ($subQuery) use ($alias, $terms, $tablePrefix) {
-            foreach ($terms as $term) {
-                $subQuery->orWhere(function ($termQuery) use ($alias, $term, $tablePrefix) {
-                    $this->applySingleTextValueSearch($termQuery, $alias, $term, $tablePrefix);
-                });
-            }
-        });
-    }
-
-    /**
-     * Search a single term using FULLTEXT when possible, otherwise prefix/substring LIKE.
-     */
-    protected function applySingleTextValueSearch($query, string $alias, string $term, string $tablePrefix): void
-    {
-        $booleanTerm = $this->prepareFullTextBooleanTerm($term);
-
-        if ($this->shouldUseFullTextSearch($term) && $booleanTerm !== '') {
-            $query->whereRaw(
-                "MATCH({$tablePrefix}{$alias}.text_value) AGAINST(? IN BOOLEAN MODE)",
-                [$booleanTerm]
-            );
-
-            return;
-        }
-
-        $query->where(function ($fallbackQuery) use ($alias, $term) {
-            $fallbackQuery->where($alias.'.text_value', 'like', $term.'%');
-
-            if (! $this->isPrefixSearchSufficient($term)) {
-                $fallbackQuery->orWhere($alias.'.text_value', 'like', '%'.$term.'%');
-            }
-        });
-    }
-
-    /**
-     * FULLTEXT works for latin terms >= ft_min_word_len; CJK/Thai need LIKE fallback.
-     */
-    protected function shouldUseFullTextSearch(string $term): bool
-    {
-        if (preg_match('/\p{Thai}/u', $term)
-            || preg_match('/\p{Han}/u', $term)
-            || preg_match('/\p{Hiragana}/u', $term)
-            || preg_match('/\p{Katakana}/u', $term)) {
-            return false;
-        }
-
-        return mb_strlen($term) >= 4;
-    }
-
-    /**
-     * Skip substring scan when a prefix match is enough for latin terms.
-     */
-    protected function isPrefixSearchSufficient(string $term): bool
-    {
-        return ! preg_match('/\p{Thai}/u', $term)
-            && ! preg_match('/\p{Han}/u', $term)
-            && mb_strlen($term) >= 4;
-    }
-
-    /**
-     * Build a BOOLEAN MODE query: +word* requires each word as a prefix match.
-     */
-    protected function prepareFullTextBooleanTerm(string $term): string
-    {
-        $term = preg_replace('/[+\-><()~*"@]+/', ' ', $term) ?? '';
-        $term = preg_replace('/\s+/', ' ', trim($term)) ?? '';
-
-        if ($term === '') {
-            return '';
-        }
-
-        return collect(explode(' ', $term))
-            ->filter(fn (string $word) => mb_strlen($word) >= 4)
-            ->map(fn (string $word) => '+'.$word.'*')
-            ->join(' ');
     }
 }

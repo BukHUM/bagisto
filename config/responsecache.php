@@ -2,7 +2,7 @@
 
 use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
-use Spatie\ResponseCache\Serializers\DefaultSerializer;
+use Spatie\ResponseCache\Serializers\JsonSerializer;
 use Webkul\FPC\Hasher\DefaultHasher;
 use Webkul\FPC\Replacers\FlashMessagesReplacer;
 
@@ -97,5 +97,5 @@ return [
     /*
      * This class is responsible for serializing responses.
      */
-    'serializer' => DefaultSerializer::class,
+    'serializer' => JsonSerializer::class,
 ];

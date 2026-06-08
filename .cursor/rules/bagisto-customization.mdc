@@ -37,11 +37,60 @@ alwaysApply: true
 - [ ] ถ้าแตะ `packages/Webkul/*` → อัปเดต `docs/development/customizations.md` ทันที
 - [ ] มีเกณฑ์ทดสอบตาม `bagisto-workflow.mdc` ก่อนปิดงาน
 
-## หลังอัปเกรด Bagisto
+## Git (โปรเจกต์ Beyondary)
 
-1. อ่าน `docs/upgrade.md` ของเวอร์ชันเป้าหมาย
-2. `composer update` / ตามคู่มือ upstream
-3. ตรวจ `docs/development/customizations.md` — re-apply patch หรือ merge custom package
-4. `php artisan migrate` + `php artisan optimize:clear` + `php artisan responsecache:clear`
-5. build assets (theme + shop ตามที่เกี่ยวข้อง)
-6. ทดสอบ checklist ใน customizations.md
+| Remote | URL | ใช้เมื่อ |
+|--------|-----|----------|
+| `origin` | `https://github.com/BukHUM/bagisto.git` | push/pull งานของเรา |
+| `upstream` | `https://github.com/bagisto/bagisto.git` | อ้างอิงอัปเดต core — **ห้าม push** |
+
+ก่อนอัปเกรดทุกครั้ง: `git status` สะอาด → `git commit` + `git push origin main`
+
+## งานที่ต้องทำต่อ (ลำดับความสำคัญ)
+
+สถานะปัจจุบัน — ดูรายละเอียดใน `docs/development/customizations.md`
+
+| ลำดับ | งาน | สถานะ | ทำไม |
+|-------|-----|--------|------|
+| 1 | Git + `origin` BukHUM | เสร็จแล้ว | เก็บ patch / rollback |
+| 2 | ย้าย Layer 5 → `packages/Beyondary/` | **ยังไม่ทำ** | อัปเกรดแล้ว core ไม่ทับ logic เรา |
+| 3 | Revert ไฟล์ core ที่แก้ตรง → upstream | หลังข้อ 2 | `packages/Webkul/*` กลับมาสะอาด |
+| 4 | บันทึก patch สำรองใน `docs/patches/` | แนะนำก่อนข้อ 2 | กู้คืนได้ถ้าย้าย package ช้า |
+
+**งานใหม่ต่อจากนี้:** ห้ามเพิ่ม core patch (Layer 5) — ใช้ theme / app / `packages/Beyondary/` เท่านั้น
+
+## อัปเกรด Bagisto — ขั้นตอนบังคับ
+
+### ก่อนอัปเกรด
+
+1. Backup DB + `.env`
+2. `git add` → `git commit` → `git push origin main`
+3. อ่าน `docs/upgrade.md` ของเวอร์ชันเป้าหมาย
+4. เปิด `docs/development/customizations.md` — ตรวจตาราง Layer 5
+
+### ระหว่างอัปเกรด
+
+1. `composer update` ตามคู่มือ (มักทับ `packages/Webkul/*`)
+2. ถ้ามี Layer 5 ค้าง: re-apply patch จาก git history หรือใช้ `packages/Beyondary/` ที่ย้ายแล้ว
+3. `php artisan migrate`
+4. `npm run build` + build theme: `cd resources/themes/beyondary && npm run build`
+
+### หลังอัปเกรด (gate — ตาม `bagisto-workflow.mdc`)
+
+1. `php artisan optimize:clear` + `php artisan responsecache:clear`
+2. ทดสอบ checklist ใน `customizations.md` (storefront 200, admin orders, search, cart)
+3. `git commit` ผลอัปเกรด → `git push origin main`
+
+## สิ่งที่อัปเกรดไม่กระทบ (ไม่ต้อง re-apply)
+
+- `resources/themes/beyondary/`
+- `config/themes.php`, `config/bagisto-vite.php`
+- `database/migrations/2026_*` (app-level)
+- `packages/Beyondary/` (เมื่อสร้างแล้ว)
+- `docs/`, `.cursor/rules/`
+
+## สิ่งที่อัปเกรดกระทบ (ต้องตรวจทุกครั้ง)
+
+- `packages/Webkul/Admin/.../OrderDataGrid.php` (จนกว่าจะย้ายไป Beyondary package)
+- `packages/Webkul/Product/.../ProductRepository.php` (จนกว่าจะย้ายไป Beyondary package)
+- `composer.lock` / dependencies ใหม่ — ทดสอบ regression

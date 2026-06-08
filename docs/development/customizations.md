@@ -7,6 +7,24 @@
 **Remote (โปรเจกต์เรา):** [github.com/BukHUM/bagisto](https://github.com/BukHUM/bagisto)  
 **Upstream อ้างอิงอัปเกรด:** [github.com/bagisto/bagisto](https://github.com/bagisto/bagisto) (ไม่ push ตรงไปที่นี่)
 
+```text
+origin   → BukHUM/bagisto    (งานของเรา)
+upstream → bagisto/bagisto     (อ้างอิง core — ห้าม push)
+```
+
+---
+
+## สิ่งที่ต้องทำต่อ (ก่อนอัปเกรดครั้งถัดไป)
+
+| ลำดับ | งาน | สถานะ | หมายเหตุ |
+|-------|-----|--------|----------|
+| 1 | ตั้ง Git + push ขึ้น BukHUM | ✅ เสร็จ | branch `main` |
+| 2 | สร้าง `packages/Beyondary/Performance/` | ✅ เสร็จ | bind ผ่าน `PerformanceServiceProvider` |
+| 3 | Revert 2 ไฟล์ใน `packages/Webkul/` กลับ upstream | ✅ เสร็จ | ตรงกับ `upstream/2.4` |
+| 4 | เก็บ patch ใน `docs/patches/` | ✅ เสร็จ | สำรองก่อนย้าย package |
+
+**พร้อมอัปเกรด:** core ใน `packages/Webkul/` สะอาด — performance logic อยู่ใน Beyondary package + theme/migration ของเรา
+
 ---
 
 ## สรุปชั้นการแก้ไข (Upgrade-Safe Layers)
@@ -16,8 +34,8 @@
 | 1 Theme | สูง | `beyondary` theme |
 | 2 App/Config/Lang | สูง | `config/themes.php`, `resources/lang/*/beyondary.php` |
 | 3 App migrations | สูง | `database/migrations/2026_06_08_*` |
-| 4 Custom package | สูง (ถ้าออกแบบถูก) | *(ยังไม่มี — เป้าหมายสำหรับ logic ด้านล่าง)* |
-| 5 Core patch | ต่ำ — โดน overwrite | `OrderDataGrid`, `ProductRepository` |
+| 4 Custom package | สูง | `packages/Beyondary/Performance/` |
+| 5 Core patch | ต่ำ — โดน overwrite | *(ไม่มีแล้ว — ย้ายไป Layer 4)* |
 
 ---
 
@@ -51,29 +69,24 @@
 
 ---
 
-## Layer 5: แก้ Core โดยตรง (เสี่ยง — ต้อง re-apply หลังอัปเกรด)
+## Layer 4: Custom package `Beyondary/Performance`
 
-| ไฟล์ | เหตุผล | แผนย้าย (แนะนำ) |
-|------|--------|------------------|
-| `packages/Webkul/Admin/src/DataGrids/Sales/OrderDataGrid.php` | แก้ N+1 ใน `formatRecords()` | สร้าง `Beyondary\Admin\DataGrids\Sales\OrderDataGrid` extend + override route/controller หรือ bind ผ่าน custom package |
-| `packages/Webkul/Product/src/Repositories/ProductRepository.php` | FULLTEXT/LIKE search, `url_key` exact | สร้าง `Beyondary\Product\Repositories\ProductRepository` extend + `bind()` ใน `AppServiceProvider` |
+| รายการ | Path / การทำงาน |
+|--------|------------------|
+| Service provider | `packages/Beyondary/Performance/src/Providers/PerformanceServiceProvider.php` |
+| Autoload | `composer.json` → `Beyondary\\Performance\\` |
+| Bootstrap | `bootstrap/providers.php` |
+| Order N+1 fix | `DataGrids/Admin/Sales/OrderDataGrid.php` — `bind(OrderDataGrid::class, …)` |
+| Product search | `Repositories/ProductRepository.php` + trait `Concerns/ImprovesProductDatabaseSearch` — `bind(ProductRepository::class, …)` |
+| Patch สำรอง | `docs/patches/order-datagrid-n1.patch`, `docs/patches/product-repository-search.patch` |
 
-### วิธีเก็บ patch ชั่วคราว (ก่อนมี custom package)
+**หลังอัปเกรด:** ถ้า upstream แก้ `searchFromDatabase()` หรือ `OrderDataGrid` ให้ merge logic ใน Beyondary package แล้วทดสอบ — **ไม่ต้องแก้** `packages/Webkul/*`
 
-เมื่อมี git แล้ว หลังแก้ core:
+---
 
-```bash
-git diff packages/Webkul/Admin/src/DataGrids/Sales/OrderDataGrid.php > docs/patches/order-datagrid-n1.patch
-git diff packages/Webkul/Product/src/Repositories/ProductRepository.php > docs/patches/product-repository-search.patch
-```
+## Layer 5: Core patch (ย้ายแล้ว)
 
-หลัง `composer update` ที่ทับไฟล์ core:
-
-```bash
-git checkout packages/Webkul/Admin/src/DataGrids/Sales/OrderDataGrid.php
-git checkout packages/Webkul/Product/src/Repositories/ProductRepository.php
-# แล้ว apply patch หรือย้ายไป custom package แทน
-```
+เดิมแก้ `OrderDataGrid` และ `ProductRepository` โดยตรง — ย้ายไป Layer 4 แล้ว ไฟล์ core กลับตรง `upstream/2.4`
 
 ---
 
@@ -82,9 +95,9 @@ git checkout packages/Webkul/Product/src/Repositories/ProductRepository.php
 ### ก่อนอัปเกรด
 
 1. **Backup:** DB + `.env` + `storage/`
-2. **Git:** init/commit หรือ export patch จากตาราง Layer 5
+2. **Git:** `git status` สะอาด → `git commit` → `git push origin main`
 3. อ่าน [upgrade.md](../upgrade.md) ของเวอร์ชันเป้าหมาย
-4. บันทึกเวอร์ชันปัจจุบัน: `php artisan bagisto:version` (ถ้ามี)
+4. ตรวจ `packages/Beyondary/Performance/` — merge ถ้า upstream เปลี่ยน API ที่เรา extend
 
 ### ระหว่างอัปเกรด
 
@@ -95,7 +108,7 @@ git checkout packages/Webkul/Product/src/Repositories/ProductRepository.php
 
 ### หลังอัปเกรด
 
-1. Re-apply patch Layer 5 **หรือ** ย้าย logic ไป custom package แล้ว bind
+1. ทดสอบ Beyondary Performance bindings ยังทำงาน (`composer dump-autoload`, admin orders, product search)
 2. `php artisan optimize:clear`
 3. `php artisan responsecache:clear`
 4. ทดสอบตาม checklist ด้านล่าง
@@ -113,17 +126,6 @@ git checkout packages/Webkul/Product/src/Repositories/ProductRepository.php
 
 ---
 
-## แนวทางระยะยาว (แนะนำ)
+## แนวทางระยะยาว
 
-สร้าง **`packages/Beyondary/`** เป็น custom module เดียว:
-
-```
-packages/Beyondary/
-├── Performance/          # ProductRepository extend, OrderDataGrid extend
-├── Theme/                # (optional) theme-related PHP ถ้ามี
-└── src/Providers/BeyondaryServiceProvider.php
-```
-
-ลงทะเบียนใน `bootstrap/providers.php` — logic ทั้งหมดอยู่นอก `packages/Webkul/*` ทำให้อัปเกรด core แล้ว merge conflict น้อยลงมาก
-
-เมื่อสร้าง custom package แล้ว ให้ **revert** ไฟล์ Layer 5 กลับเป็น upstream และลบแถวออกจากตาราง Layer 5 ในเอกสารนี้
+ขยาย **`packages/Beyondary/`** เมื่อมี customization เพิ่ม (เช่น `Theme/` สำหรับ PHP helpers ของ theme) — ใช้ pattern เดียวกับ Performance: extend + `bind()` ใน provider แทนแก้ `packages/Webkul/*`
