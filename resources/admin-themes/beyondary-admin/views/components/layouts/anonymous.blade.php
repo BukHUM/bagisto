@@ -39,9 +39,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
+        rel="preload"
+        as="style"
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-    />
+        onload="this.onload=null;this.rel='stylesheet'"
+    >
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+    </noscript>
 
     @if ($favicon = core()->getConfigData('general.design.admin_logo.favicon'))
         <link

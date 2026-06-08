@@ -1,8 +1,35 @@
 {!! view_render_event('bagisto.shop.layout.header.before') !!}
 
+@inject('themeCustomizationRepository', 'Webkul\Theme\Repositories\ThemeCustomizationRepository')
+
+@php
+    use Beyondary\Storefront\Services\HomeSectionService;
+
+    $channel = core()->getCurrentChannel();
+    $locale = app()->getLocale();
+
+    $navigation = $themeCustomizationRepository
+        ->findWhere([
+            'type' => 'static_content',
+            'status' => 1,
+            'theme_code' => $channel->theme,
+            'channel_id' => $channel->id,
+        ])
+        ->first(fn ($item) => $item->name === HomeSectionService::NAVIGATION_NAME);
+
+    $navOptions = $navigation?->translate($locale)?->options;
+    $defaultNav = app(HomeSectionService::class)->defaultNavigationFields($locale);
+
+    $announcement = $navOptions['announcement'] ?? $defaultNav['announcement'];
+    $navLinks = collect($navOptions['links'] ?? $defaultNav['links'])
+        ->sortBy('sort_order')
+        ->values()
+        ->all();
+@endphp
+
 <div class="bg-brand-earth text-white text-xs md:text-sm text-center py-2 px-4 flex justify-center items-center gap-2 tracking-wide">
     <i class="fa-solid fa-plane" aria-hidden="true"></i>
-    @lang('beyondary.announcement')
+    {{ $announcement }}
 </div>
 
 <header class="bg-brand-light shadow-sm sticky top-0 z-50 border-b border-[#EAE5DA]">
@@ -22,21 +49,11 @@
         />
 
         <nav class="hidden lg:flex space-x-8 text-sm font-medium uppercase tracking-wider text-brand-dark/80">
-            <a href="{{ route('shop.home.index') }}" class="hover:text-brand-gold transition">
-                @lang('beyondary.nav.home')
-            </a>
-            <a href="{{ route('shop.search.index') }}" class="hover:text-brand-gold transition">
-                @lang('beyondary.nav.shop')
-            </a>
-            <a href="{{ route('shop.home.index') }}#categories" class="hover:text-brand-gold transition">
-                @lang('beyondary.nav.categories')
-            </a>
-            <a href="{{ route('shop.home.index') }}#artisans" class="hover:text-brand-gold transition">
-                @lang('beyondary.nav.story')
-            </a>
-            <a href="{{ route('shop.home.index') }}#contact" class="hover:text-brand-gold transition">
-                @lang('beyondary.nav.contact')
-            </a>
+            @foreach ($navLinks as $link)
+                <a href="{{ $link['url'] }}" class="hover:text-brand-gold transition">
+                    {{ $link['title'] }}
+                </a>
+            @endforeach
         </nav>
 
         <div class="flex items-center space-x-4 md:space-x-6">
@@ -62,21 +79,11 @@
         id="beyondary-mobile-menu"
         class="hidden lg:hidden bg-brand-light border-t border-[#EAE5DA] px-4 py-4 space-y-4 shadow-inner"
     >
-        <a href="{{ route('shop.home.index') }}" class="block text-brand-dark font-medium">
-            @lang('beyondary.nav.home')
-        </a>
-        <a href="{{ route('shop.search.index') }}" class="block text-brand-dark font-medium">
-            @lang('beyondary.nav.shop')
-        </a>
-        <a href="{{ route('shop.home.index') }}#categories" class="block text-brand-dark font-medium">
-            @lang('beyondary.nav.categories')
-        </a>
-        <a href="{{ route('shop.home.index') }}#artisans" class="block text-brand-dark font-medium">
-            @lang('beyondary.nav.story')
-        </a>
-        <a href="{{ route('shop.home.index') }}#contact" class="block text-brand-dark font-medium">
-            @lang('beyondary.nav.contact')
-        </a>
+        @foreach ($navLinks as $link)
+            <a href="{{ $link['url'] }}" class="block text-brand-dark font-medium">
+                {{ $link['title'] }}
+            </a>
+        @endforeach
 
         @if(core()->getCurrentChannel()->locales()->count() > 1 || core()->getCurrentChannel()->currencies()->count() > 1)
             <div class="border-t border-[#EAE5DA] pt-4 flex items-center justify-between gap-4">

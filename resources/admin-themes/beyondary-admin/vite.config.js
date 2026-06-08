@@ -29,6 +29,16 @@ export default defineConfig(({ mode }) => {
         build: {
             emptyOutDir: true,
             minify: "esbuild",
+            cssCodeSplit: true,
+            rollupOptions: {
+                output: {
+                    manualChunks: {
+                        vue: ["vue"],
+                        veeValidate: ["vee-validate", "@vee-validate/rules", "@vee-validate/i18n"],
+                        vendor: ["axios", "mitt", "flatpickr"],
+                    },
+                },
+            },
         },
 
         envDir: projectRoot,
@@ -50,6 +60,7 @@ export default defineConfig(({ mode }) => {
                     "assets/css/app.css",
                     "assets/js/app.js",
                     "assets/js/chart.js",
+                    "assets/js/publish-config-images.js",
                 ],
                 refresh: true,
                 preload: false,

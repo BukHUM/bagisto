@@ -1,5 +1,13 @@
 @php
+    use Webkul\Theme\Models\ThemeCustomization;
+
     $channel = core()->getCurrentChannel();
+
+    $homeCustomizations = collect($customizations)->filter(
+        fn ($customization) => $customization->type !== ThemeCustomization::FOOTER_LINKS
+    );
+
+    $useAdminSections = $homeCustomizations->isNotEmpty();
 @endphp
 
 @push('meta')
@@ -21,10 +29,48 @@
         {{ $channel->home_seo['meta_title'] ?? $channel->name }}
     </x-slot>
 
-    @include('shop::home.partials.hero')
-    @include('shop::home.partials.trust-badges')
-    @include('shop::home.partials.categories')
-    @include('shop::home.partials.featured-products')
-    @include('shop::home.partials.our-story')
-    @include('shop::home.partials.newsletter')
+    @if ($useAdminSections)
+        @foreach ($homeCustomizations as $customization)
+            @php ($data = $customization->options) @endphp
+
+            @switch ($customization->type)
+                @case (ThemeCustomization::IMAGE_CAROUSEL)
+                    <x-shop::carousel.hero :options="$data" />
+                    @break
+
+                @case (ThemeCustomization::SERVICES_CONTENT)
+                    @include('shop::home.partials.trust-badges', [
+                        'services' => $data['services'] ?? null,
+                    ])
+                    @break
+
+                @case (ThemeCustomization::CATEGORY_CAROUSEL)
+                    @include('shop::home.partials.categories', [
+                        'title' => $data['title'] ?? null,
+                    ])
+                    @break
+
+                @case (ThemeCustomization::PRODUCT_CAROUSEL)
+                    @include('shop::home.partials.product-carousel-section', [
+                        'title' => $data['title'] ?? null,
+                        'filters' => $data['filters'] ?? [],
+                    ])
+                    @break
+
+                @case (ThemeCustomization::STATIC_CONTENT)
+                    @include('shop::home.partials.static-content', ['data' => $data])
+                    @break
+            @endswitch
+        @endforeach
+
+        @include('shop::home.partials.newsletter')
+    @else
+        {{-- Fallback: mockup layout when no Admin → Settings → Themes entries for this channel/theme --}}
+        @include('shop::home.partials.hero')
+        @include('shop::home.partials.trust-badges')
+        @include('shop::home.partials.categories')
+        @include('shop::home.partials.featured-products')
+        @include('shop::home.partials.our-story')
+        @include('shop::home.partials.newsletter')
+    @endif
 </x-shop::layouts>

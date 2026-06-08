@@ -10,6 +10,7 @@
 | [upgrade.md](upgrade.md) | คู่มืออัปเกรด Bagisto (v2.3 → v2.4 ฯลฯ) |
 | [development/agents.md](development/agents.md) | คำแนะนำสำหรับ AI agents (โครงสร้าง repo, commands) |
 | [development/customizations.md](development/customizations.md) | สิ่งที่แก้นอก core + แผนอัปเกรด Bagisto |
+| [development/storefront-theme-guide.md](development/storefront-theme-guide.md) | คู่มือปรับหน้าบ้าน beyondary (menu, hero, slider, footer) |
 | [development/admin-theme-plan.md](development/admin-theme-plan.md) | แผนพัฒนา Beyondary Admin theme (semi-dark UX/UI) |
 | [development/claude.md](development/claude.md) | คำแนะนำสำหรับ Claude Code |
 | [mockup/thai_handmade_global_store.html](mockup/thai_handmade_global_store.html) | HTML mockup ต้นฉบับ — Beyondary storefront |

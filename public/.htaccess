@@ -21,6 +21,13 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
+# Vite hashed build assets — long-lived immutable cache
+<IfModule mod_headers.c>
+    <FilesMatch "-[A-Za-z0-9_-]{6,}\.(js|css|woff2?)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
 # Media Files Cache-Control
 <FilesMatch ".(jpg|jpeg|gif|png|svg|swf|webp)$">
     <IfModule mod_headers.c>

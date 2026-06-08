@@ -12,10 +12,14 @@
     ];
 @endphp
 
+@php
+    $sectionTitle = $title ?? __('beyondary.categories.title');
+@endphp
+
 <section id="categories" class="py-16 md:py-24 container mx-auto px-4">
     <div class="text-center mb-12">
         <h2 class="font-serif text-3xl md:text-4xl text-brand-dark font-bold mb-3">
-            @lang('beyondary.categories.title')
+            {{ $sectionTitle }}
         </h2>
         <div class="w-16 h-1 bg-brand-gold mx-auto"></div>
     </div>

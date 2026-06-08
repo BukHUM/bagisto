@@ -67,14 +67,30 @@
         />
 
         <link
-            rel="stylesheet"
+            rel="preload"
+            as="style"
             href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Prompt:wght@300;400;500;600&display=swap"
-        />
+            onload="this.onload=null;this.rel='stylesheet'"
+        >
+        <noscript>
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Prompt:wght@300;400;500;600&display=swap"
+            />
+        </noscript>
 
         <link
-            rel="stylesheet"
+            rel="preload"
+            as="style"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
+            onload="this.onload=null;this.rel='stylesheet'"
+        >
+        <noscript>
+            <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            />
+        </noscript>
 
         @stack('styles')
 

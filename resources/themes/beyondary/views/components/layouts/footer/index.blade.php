@@ -4,7 +4,10 @@
 @inject('categoryRepository', 'Webkul\Category\Repositories\CategoryRepository')
 
 @php
+    use Beyondary\Storefront\Services\HomeSectionService;
+
     $channel = core()->getCurrentChannel();
+    $locale = app()->getLocale();
 
     $footerLinks = $themeCustomizationRepository->findOneWhere([
         'type' => 'footer_links',
@@ -12,6 +15,15 @@
         'theme_code' => $channel->theme,
         'channel_id' => $channel->id,
     ]);
+
+    $footerOptions = $footerLinks?->translate($locale)?->options ?? [];
+    $defaultFooter = app(HomeSectionService::class)->defaultFooterFields($locale);
+
+    $footerAbout = $footerOptions['about'] ?? $defaultFooter['about'];
+    $footerSocial = array_merge($defaultFooter['social'], $footerOptions['social'] ?? []);
+    $supportLinks = $footerOptions['column_2'] ?? $defaultFooter['column_2'];
+
+    usort($supportLinks, fn ($a, $b) => ($a['sort_order'] ?? 0) <=> ($b['sort_order'] ?? 0));
 
     $rootCategories = collect($categoryRepository->getVisibleCategoryTree($channel->root_category_id))->take(5);
 @endphp
@@ -27,17 +39,17 @@
                 />
 
                 <p class="text-brand-dark/70 text-sm mb-6 leading-relaxed">
-                    @lang('beyondary.footer.about')
+                    {{ $footerAbout }}
                 </p>
 
                 <div class="flex space-x-4">
-                    <a href="#" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition" aria-label="Facebook">
+                    <a href="{{ $footerSocial['facebook'] ?? '#' }}" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition" aria-label="Facebook">
                         <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
                     </a>
-                    <a href="#" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition" aria-label="Instagram">
+                    <a href="{{ $footerSocial['instagram'] ?? '#' }}" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition" aria-label="Instagram">
                         <i class="fa-brands fa-instagram" aria-hidden="true"></i>
                     </a>
-                    <a href="#" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition" aria-label="Pinterest">
+                    <a href="{{ $footerSocial['pinterest'] ?? '#' }}" class="w-8 h-8 rounded-full bg-white border border-[#EAE5DA] flex items-center justify-center text-brand-dark/60 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition" aria-label="Pinterest">
                         <i class="fa-brands fa-pinterest-p" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -68,26 +80,19 @@
                     @lang('beyondary.footer.support')
                 </h4>
                 <ul class="space-y-3 text-sm text-brand-dark/70">
-                    @if ($footerLinks?->options)
-                        @foreach ($footerLinks->options as $footerLinkSection)
-                            @php
-                                usort($footerLinkSection, fn ($a, $b) => $a['sort_order'] - $b['sort_order']);
-                            @endphp
-                            @foreach ($footerLinkSection as $link)
-                                <li>
-                                    <a href="{{ $link['url'] }}" class="hover:text-brand-gold transition">
-                                        {{ $link['title'] }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        @endforeach
-                    @else
+                    @forelse ($supportLinks as $link)
+                        <li>
+                            <a href="{{ $link['url'] }}" class="hover:text-brand-gold transition">
+                                {{ $link['title'] }}
+                            </a>
+                        </li>
+                    @empty
                         <li>
                             <a href="{{ route('shop.home.index') }}#contact" class="hover:text-brand-gold transition">
                                 @lang('beyondary.nav.contact')
                             </a>
                         </li>
-                    @endif
+                    @endforelse
                 </ul>
             </div>
 

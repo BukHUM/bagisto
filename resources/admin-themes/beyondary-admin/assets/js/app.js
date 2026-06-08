@@ -1,7 +1,11 @@
 /**
  * This will track all the images and fonts for publishing.
  */
-import.meta.glob(["../images/**", "../fonts/**"]);
+import.meta.glob([
+    "../images/**",
+    "!../images/configuration/**",
+    "../fonts/**",
+]);
 
 /**
  * Main vue bundler.

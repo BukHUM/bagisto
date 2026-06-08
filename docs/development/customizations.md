@@ -34,7 +34,7 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 | 1 Theme | สูง | shop `beyondary` + admin `beyondary-admin` |
 | 2 App/Config/Lang | สูง | `config/themes.php`, `resources/lang/*/beyondary.php` |
 | 3 App migrations | สูง | `database/migrations/2026_06_08_*` |
-| 4 Custom package | สูง | `packages/Beyondary/Performance/` |
+| 4 Custom package | สูง | `packages/Beyondary/Performance/`, `packages/Beyondary/Storefront/` |
 | 5 Core patch | ต่ำ — โดน overwrite | *(ไม่มีแล้ว — ย้ายไป Layer 4)* |
 
 ---
@@ -51,6 +51,9 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 | Build output | `public/themes/shop/beyondary/build/` |
 | Static images | `public/themes/shop/beyondary/images/` |
 | ภาษา theme | `resources/lang/th/beyondary.php`, `resources/lang/en/beyondary.php` |
+
+**คู่มือปรับหน้าบ้าน (menu, hero, footer ฯลฯ):** [storefront-theme-guide.md](storefront-theme-guide.md)  
+**แผน Admin UI แก้ theme (upgrade-safe):** [storefront-theme-guide.md §11](storefront-theme-guide.md#11-admin-ui-สำหรับแก้-theme-แผน-upgrade-safe)
 
 **หลังอัปเกรด:** ไม่ต้องทำอะไรกับ theme นอกจากทดสอบ storefront + `npm run build` ใน `resources/themes/beyondary/` ถ้าแก้ assets
 
@@ -106,6 +109,22 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 | Patch สำรอง | `docs/patches/order-datagrid-n1.patch`, `docs/patches/product-repository-search.patch` |
 
 **หลังอัปเกรด:** ถ้า upstream แก้ `searchFromDatabase()` หรือ `OrderDataGrid` ให้ merge logic ใน Beyondary package แล้วทดสอบ — **ไม่ต้องแก้** `packages/Webkul/*`
+
+### Custom package `Beyondary/Storefront`
+
+| รายการ | Path / การทำงาน |
+|--------|------------------|
+| Service provider | `packages/Beyondary/Storefront/src/Providers/StorefrontServiceProvider.php` |
+| Autoload | `composer.json` → `Beyondary\\Storefront\\` |
+| Bootstrap | `bootstrap/providers.php` |
+| Admin dashboard | `admin/beyondary/storefront` — เมนู **Beyondary → หน้าร้าน** |
+| Homepage seed | `database/migrations/2026_06_08_000005_*`, `000006_*` (Our Story) |
+| Section forms | `admin/beyondary/storefront/sections/{hero,trust,...}/edit` |
+| Export / Import | ZIP v2 (พร้อมรูป) + JSON v1 · `beyondary:storefront:export\|import\|install-preset` |
+| Transfer service | `StorefrontTransferService.php` — remap `storage/theme/{id}/` ตอน import |
+| Theme wire-up | `resources/themes/beyondary/views/home/` (Phase 1) |
+
+**หลังอัปเกรด:** ตรวจ `ThemeCustomizationRepository` API ยังตรงกับ controller ใน package — **ไม่แก้** `packages/Webkul/Admin`
 
 ---
 

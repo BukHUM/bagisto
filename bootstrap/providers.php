@@ -2,6 +2,7 @@
 
 use App\Providers\AppServiceProvider;
 use Beyondary\Performance\Providers\PerformanceServiceProvider;
+use Beyondary\Storefront\Providers\StorefrontServiceProvider;
 use Webkul\Admin\Providers\AdminServiceProvider;
 use Webkul\Attribute\Providers\AttributeServiceProvider;
 use Webkul\BookingProduct\Providers\BookingProductServiceProvider;
@@ -50,6 +51,7 @@ return [
      */
     AppServiceProvider::class,
     PerformanceServiceProvider::class,
+    StorefrontServiceProvider::class,
 
     /**
      * Webkul's service providers.
