@@ -1,0 +1,33 @@
+---
+description: Bagisto performance standards — queries, cache, DB, jobs
+alwaysApply: true
+---
+
+# Bagisto Performance
+
+Reference: `docs/performance-analysis.md`
+
+## Database
+
+- Add indexes for columns used in `WHERE`, `JOIN`, `ORDER BY` — use `Schema::hasIndex()` guards in migrations.
+- Avoid `LIKE '%term%'` on large tables; prefer FULLTEXT (`MATCH...AGAINST`) for latin search, exact match for slugs (`url_key`).
+- EAV (`product_attribute_values`): minimize self-joins; prefer `product_flat` / index tables for read paths.
+- New migrations go in `database/migrations/` with reversible `down()`.
+
+## Queries & Code
+
+- No N+1: eager-load in DataGrids (`formatRecords` batch preload), listings (`with([...])`), admin loops.
+- DataGrid column closures must not call `Repository->find()` per row.
+- Use repositories; select only needed columns in heavy reports.
+- Dispatch heavy work (`ShouldQueue` jobs: price/inventory/ES index) — never block HTTP with `sync` in production.
+
+## Production Config (when deploying)
+
+- `QUEUE_CONNECTION=redis`, `CACHE_STORE=redis`, `SESSION_DRIVER=redis`
+- `APP_DEBUG=false`, run `php artisan optimize`
+- Enable Elasticsearch when catalog > ~1,000 SKUs
+
+## After Changes
+
+- Run `vendor/bin/pint --dirty` on PHP changes.
+- Clear caches if config/routes change: `php artisan optimize:clear`

@@ -1,0 +1,182 @@
+---
+description: Beyondary shop theme — design system, mockup mapping, Blade structure
+alwaysApply: true
+---
+
+# Beyondary Thai Craft — Bagisto Shop Theme
+
+**Theme code:** `beyondary` (child of `default`)  
+**Platform:** Bagisto v2.4.x / Laravel 12  
+**Objective:** แปลง Static HTML Mockup เป็น Custom Theme โดยคงสไตล์ Premium Thai Craft และรองรับ E-commerce ครบ
+
+## 0. Mockup Source of Truth (อ่านก่อนแก้ Blade/CSS ทุกครั้ง)
+
+**โฟลเดอร์อ้างอิง:** `docs/mockup/`
+
+| ไฟล์ | หน้า | ใช้เมื่อ |
+|------|------|---------|
+| `docs/mockup/thai_handmade_global_store.html` | Homepage (ร้านค้าหลัก) | Layout, Header, Footer, Home sections, Product Card, Tailwind config ต้นฉบับ |
+
+**กฎการอ้างอิง Mockup**
+
+- เปิดและอ่าน `docs/mockup/thai_handmade_global_store.html` ก่อนสร้างหรือแก้ view/CSS ของ theme
+- คัดลอก **Tailwind classes, โครงสร้าง HTML, spacing, breakpoints** จาก mockup ให้ตรงที่สุด — ห้ามเดา UI เอง
+- สี/ฟอนต์ใน mockup (บรรทัด `tailwind.config` ในไฟล์ HTML) เป็นแหล่งเดียวกับ section 1 ด้านล่าง
+- แมป section ใน mockup → Blade ตาม section 3 (เช่น Hero, Trust Badges, `#categories`, `#shop`, Our Story, Newsletter, Footer)
+- รูป/asset ชั่วคราวใน mockup → ย้ายไป `public/themes/shop/beyondary/images/` เมื่อ implement จริง
+- ถ้าเพิ่ม mockup หน้าใหม่ใน `docs/mockup/` ให้เพิ่มตารางใน section 0 นี้ด้วย
+
+**Section ใน mockup ปัจจุบัน (`thai_handmade_global_store.html`):**
+
+1. Top Announcement Bar  
+2. Navigation (desktop + mobile `#mobile-menu`)  
+3. Hero Section  
+4. Trust Badges  
+5. Categories Grid (`#categories`)  
+6. Featured Products / New Arrivals (`#shop`)  
+7. Our Story  
+8. Newsletter  
+9. Footer  
+
+---
+
+## 1. Design System & Brand Guidelines
+
+คุณ (Cursor) ต้องใช้ค่าเหล่านี้เป็นพื้นฐานในการตั้งค่า Tailwind CSS และการเขียน UI Components
+
+1.1 Colors (ชุดสี)
+
+ต้องนำไปใส่ใน tailwind.config.js ในส่วน theme.extend.colors:
+
+brand-gold: #B88B54 (สีทองบรอนซ์ สำหรับปุ่ม เน้นข้อความ และ Hover state)
+
+brand-dark: #3A2618 (สีน้ำตาลเข้ม สำหรับข้อความหลัก สีพื้นหลังเข้ม)
+
+brand-earth: #6B4A31 (สีน้ำตาลไม้ สำหรับข้อความรอง หรือเส้นแบ่ง)
+
+brand-light: #F8F6F0 (สีครีมวอร์มโทน สำหรับพื้นหลังเว็บไซต์หลัก)
+
+1.2 Typography (ฟอนต์)
+
+ฟอนต์หลัก (Sans-serif): 'Prompt', sans-serif (ใช้กับข้อความทั่วไป, เมนู, รายละเอียดสินค้า)
+
+ฟอนต์หัวข้อ (Serif): 'Playfair Display', serif (ใช้กับ Heading, ชื่อคอลเลกชัน ให้ความรู้สึกพรีเมียม)
+หมายเหตุ: ต้อง Import Google Fonts ทั้งสองตัวนี้ในไฟล์ Layout หลัก (master.blade.php หรือเทียบเท่า)
+
+1.3 UI/UX Traits
+
+Corners: ใช้มุมโค้งมนเล็กน้อย (rounded-sm) สำหรับการ์ดสินค้า รูปภาพ และปุ่ม
+
+Shadows: เน้นเงาแบบนุ่มนวล (shadow-sm, shadow-lg บน Hover)
+
+Hover Effects: - รูปภาพสินค้า/หมวดหมู่: เมื่อ Hover ให้ค่อยๆ ซูมภาพเข้า (hover:scale-105 transition duration-500 หรือ 700)
+
+ปุ่ม (Buttons): เปลี่ยนพื้นหลัง/ข้อความเป็นสี brand-gold
+
+Images: โลโก้ที่มีพื้นหลังสีครีม ให้ใช้ CSS class mix-blend-multiply หรือ blend-multiply เพื่อให้เนียนไปกับพื้นหลังเว็บ
+
+2. Tech Stack & Setup Requirements
+
+CSS Framework: ใช้ Tailwind CSS เป็นหลัก (ไม่ต้องเขียน Custom CSS เว้นแต่จำเป็นจริงๆ)
+
+Icons: ใช้ FontAwesome 6.4.0 (สามารถเปลี่ยนเป็น Bagisto Default Icons ได้ หาก Bagisto มี Phosphor/Heroicons ให้ใช้เป็นมาตรฐาน แต่ต้องเทียบเคียงไอคอนให้สื่อความหมายเหมือนใน Mockup)
+
+Template Engine: Laravel Blade (.blade.php)
+
+Custom CSS: เพิ่มโค้ดเหล่านี้ในไฟล์ CSS หลักของ Theme:
+
+.blend-multiply { mix-blend-mode: multiply; }
+.image-placeholder { background-color: #E5E7EB; display: flex; align-items: center; justify-content: center; color: #6B7280; font-size: 0.875rem; text-align: center; padding: 1rem; transition: all 0.3s ease; }
+.product-card:hover .image-placeholder { transform: scale(1.05); }
+.overflow-hidden-image { overflow: hidden; }
+
+
+3. Component Mapping (Bagisto Blade Structure)
+
+ในการสร้าง Theme ให้แตกโครงสร้าง HTML เป็น Blade Components/Partials ตามมาตรฐานของ Bagisto ดังนี้:
+
+3.1 Layout & Header (layouts/master.blade.php, layouts/header/index.blade.php)
+
+Top Announcement Bar: วางไว้เหนือ Header แสดงข้อความ "จัดส่งฟรีทั่วโลก..."
+
+Logo Logic (Important): โลโก้ต้องมีระบบ Fallback หากโหลดรูปไม่สำเร็จ (อิงตาม Mockup)
+
+<img src="{{ asset('themes/beyondary/images/logo.png') }}" alt="Beyondary" class="h-10 md:h-14 w-auto object-contain blend-multiply" onerror="this.onerror=null; this.style.display='none'; document.getElementById('fallback-logo').style.display='flex';">
+
+
+Navigation: แปลงเมนู Static HTML ให้เชื่อมกับ Bagisto Category Tree (แสดงหมวดหมู่หลักแบบ Dynamic)
+
+Language/Currency Switcher: เชื่อมต่อกับ Bagisto Core Functions (core()->getCurrentChannel(), core()->getCurrentLocale(), core()->getCurrentCurrencyCode())
+
+Mini Cart: เชื่อมต่อกับ Bagisto Vue/Blade Mini Cart component
+
+3.2 Homepage (home/index.blade.php)
+
+แปลงแต่ละ Section เป็น Blade partials หรือ Bagisto CMS Blocks:
+
+Hero Section: ภาพแบนเนอร์ ใช้ mix-blend-overlay กับภาพพื้นหลัง
+
+Trust Badges: (Worldwide Shipping, 100% Authentic, Secure Payment) วางเป็น Static Block ใต้ Hero
+
+Categories Grid: แสดง Featured Categories (Home & Living, Fashion, Wellness & Spa, Art & Collectibles) แบบ Dynamic โดยใช้ Bagisto Category Models
+
+Featured Products (New Arrivals):
+
+ลูปแสดงสินค้าผ่าน @foreach ($products as $product)
+
+แปลง Product Card HTML ให้เป็น Blade component (เช่น components/products/card.blade.php)
+
+โครงสร้าง Card: ป้าย Badge (New/Best Seller), รูปสินค้า (มี Hover ซูม), ปุ่ม Add to Cart (แสดงเมื่อ Hover หรือบนมือถือ), หมวดหมู่, ชื่อสินค้า, ราคา (ต้องรองรับสกุลเงินปลายทางที่เลือก)
+
+Our Story Section: เป็น CMS Block เนื้อหาเรื่องราวแบรนด์
+
+Newsletter: เชื่อมต่อฟอร์มกับ Bagisto Newsletter Subscription route
+
+3.3 Footer (layouts/footer/index.blade.php)
+
+โลโก้พร้อม Fallback text
+
+ลิงก์ร้านค้าและหน้าช่วยเหลือ (ดึงจาก Bagisto CMS Pages เช่น FAQ, Shipping Info, Returns, Terms of Service)
+
+ไอคอน Payment Methods
+
+4. Development Rules for Cursor
+
+### 4.0 Workflow & ข้อควรระวัง theme
+
+Workflow ทั้งโปรเจกต์ (todo list, ทดสอบทีละ phase): ดู **`.cursor/rules/bagisto-workflow.mdc`**
+
+**ข้อควรระวังเฉพาะ theme `beyondary`**
+
+- `bagisto_asset('images/...')` ใน child theme มักต้องใช้ namespace `'shop'` — มิฉะนั้น `Theme::url()` จะ `abort(404)`
+- ใน Vue template ภายใน Blade **ห้ามใช้** `:key="product.id"` — Blade ตีความ `:key` เป็น PHP binding; ใช้แบบ default Bagisto (ไม่ใส่ `:key`) หรือ escape ให้ถูกต้อง
+
+---
+
+Preserve the Aesthetics: ห้ามละทิ้ง Classes ของ Tailwind ที่เกี่ยวกับการตกแต่ง เช่น aspect-[4/5], bg-brand-light, text-brand-dark หรือ backdrop-blur-sm เด็ดขาด เพราะมีผลต่อความรู้สึกพรีเมียมของแบรนด์
+
+Blade Syntax First: ใช้ Blade directives (@if, @foreach, {{ }}) สำหรับข้อมูล Dynamic ทั้งหมด
+
+Localization: ข้อความที่อยู่ใน Mockup ภาษาไทย ควรถูกห่อด้วยฟังก์ชัน __('path.to.string') ของ Laravel เผื่อสำหรับการทำ Multi-language ในอนาคต
+
+Mobile Responsiveness: รักษา Tailwind breakpoint classes (sm:, md:, lg:) ไว้ทั้งหมดตาม Mockup ต้นฉบับ เมนูบนมือถือต้องพับเก็บได้ (Hamburger Menu)
+
+Vue.js Integration: Bagisto ใช้ Vue.js สำหรับส่วนที่ Interactive สูง (เช่น Add to Cart, Mini Cart) หากจำเป็นต้องแปลง HTML Button ให้เป็น Vue Component (เช่น <v-add-to-cart>) ให้รักษา Styling Tailwind ของปุ่มดั้งเดิมไว้ผ่าน prop หรือ template slots
+
+## 5. Theme File Locations (Bagisto)
+
+| ประเภท | Path |
+|--------|------|
+| Theme config | `config/themes.php` |
+| Blade overrides | `resources/themes/beyondary/views/` |
+| Static assets | `public/themes/shop/beyondary/` |
+| Vite source (copy จาก Shop) | `packages/Webkul/Shop/` หรือ theme build แยก |
+| เปิดใช้ theme | Admin → Settings → Channels → Theme = `beyondary` |
+
+อย่าแก้ `packages/Webkul/Shop/src/Resources/views/` โดยตรง — ใช้ child theme + `parent => 'default'`
+
+อย่าแก้ `packages/Webkul/*` อื่นๆ สำหรับ UI/logic ของ theme — ดู `.cursor/rules/bagisto-customization.mdc` และ `docs/development/customizations.md`
+
+---
+
+**Instruction to Cursor:** อ่าน rule นี้และ **`docs/mockup/thai_handmade_global_store.html`** ก่อนแก้ Blade/CSS ทุกครั้ง ให้สี ฟอนต์ และ Tailwind structure ตรง mockup และแปลงเป็นโครงสร้าง Bagisto theme (`resources/themes/beyondary/`) อย่างถูกต้อง

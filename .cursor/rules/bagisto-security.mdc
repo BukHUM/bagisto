@@ -1,0 +1,37 @@
+---
+description: Bagisto security standards — auth, input, secrets, Laravel
+alwaysApply: true
+---
+
+# Bagisto Security
+
+## Secrets & Config
+
+- Never commit `.env`, API keys, or credentials.
+- Use `config()` in application code — no `env()` outside `config/` files.
+- `APP_DEBUG=false` and `LOG_LEVEL=warning` in production.
+
+## Input & Output
+
+- Validate with Form Request classes in `Http/Requests/`.
+- Use Eloquent/query builder bindings — never interpolate user input into `whereRaw()` / `DB::raw()`.
+- Escape output in Blade (`{{ }}`); avoid `{!! !!}` unless HTML is sanitized (e.g. Purify).
+- File uploads: validate mime/size; store outside public when sensitive.
+
+## Auth & Access
+
+- Admin routes: `admin` + `bouncer()` ACL checks.
+- Shop customer routes: `customer` guard where required.
+- Do not bypass CSRF on state-changing endpoints.
+- Mass assignment: use `$fillable` / `$guarded` on models.
+
+## Data & Sessions
+
+- Scope queries by `channel_id` / locale where Bagisto expects channel isolation.
+- Do not log passwords, tokens, or full payment payloads.
+- Report upstream Bagisto vulnerabilities via `SECURITY.md` — do not disclose publicly.
+
+## Dependencies
+
+- Do not add/remove Composer packages without approval.
+- Keep `composer.lock` intact unless intentionally upgrading.

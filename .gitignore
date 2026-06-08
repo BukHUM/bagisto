@@ -1,7 +1,9 @@
 .agents
 .agent*
 .claude
-.cursor
+# Cursor IDE — เก็บเฉพาะ rules ของโปรเจกต์
+.cursor/*
+!.cursor/rules/
 .env
 .env.testing
 .idea
@@ -13,9 +15,6 @@
 *.hot
 .agents/
 .claude/
-.cursor/
-!.cursor/rules/
-!.cursor/rules/**
 .opencode/
 /agents/
 agents/

@@ -1,0 +1,44 @@
+---
+description: Bagisto project workflow — todo list, phased delivery, test gates
+alwaysApply: true
+---
+
+# Bagisto Workflow (ทั้งโปรเจกต์)
+
+ใช้กับ **ทุกงาน** ใน repo นี้ — theme, admin, package, migration, performance, docs, bug fix
+
+## 1. Todo list ก่อนเริ่ม (บังคับ)
+
+- งานที่มี **2 ขั้นตอนขึ้นไป** ให้สร้าง **Todo list ทันที** ก่อนแก้โค้ด
+- แบ่งเป็น **phase** ชัดเจน พร้อมเกณฑ์ผ่านต่อ phase
+- อัปเดตสถานะให้ user เห็นความคืบหน้า: `pending` → `in_progress` → `completed`
+- ห้ามปิดงานหรือสรุปว่าเสร็จโดยไม่อัปเดต todo
+
+## 2. ทดสอบทีละ Phase (quality gate)
+
+- **ห้ามเริ่ม phase ถัดไป** จนกว่า phase ปัจจุบันผ่านเกณฑ์ที่ระบุใน todo
+- ไม่ผ่าน → **แก้จนผ่าน** → ทดสอบซ้ำ — ไม่ข้ามขั้น
+- Agent ต้อง **รันคำสั่งทดสอบจริง** เอง (ไม่แค่บอกให้ user ลอง)
+
+### เกณฑ์ผ่านตามประเภทงาน
+
+| ประเภทงาน | เกณฑ์ผ่าน (อย่างน้อย 1 ข้อ) |
+|-----------|---------------------------|
+| Config / env | `php artisan config:clear` สำเร็จ, ค่าที่แก้มีผลตามที่ตั้งใจ |
+| Migration | `php artisan migrate` สำเร็จ, `down()` ย้อนได้ถ้าเกี่ยวข้อง |
+| Package / PHP logic | หน้า/route ที่เกี่ยวข้อง **HTTP 200** หรือ response ถูกต้อง, ไม่มี 500 |
+| Blade / view | `php artisan view:clear` สำเร็จ, หน้าที่แก้โหลดได้ **HTTP 200** |
+| Vite / frontend build | `npm run build` (หรือ build ของ package/theme นั้น) **exit 0** |
+| Storefront / admin UI | เปิด URL ที่เกี่ยวข้องโหลดได้, ไม่มี error ใน Debugbar/log |
+| Cache / แก้ error เดิม | `php artisan responsecache:clear` + `php artisan cache:clear` หลังแก้ view ที่เคย 404/500 |
+| Test ที่มีใน repo | รัน test ที่เกี่ยวข้องผ่าน (ถ้ามีและ scope ตรงงาน) |
+
+## 3. รายงานความคืบหน้า
+
+- จบแต่ละ phase: สรุปสั้นๆ ว่า **ผ่าน/ไม่ผ่าน** และคำสั่งที่รัน
+- ถ้า phase ล้มเหลว: บอกสาเหตุ + สิ่งที่แก้ ก่อนไป phase ถัดไป
+
+## 4. ขอบเขต
+
+- Rule นี้ครอบคลุม theme (`beyondary`), `packages/Webkul/*`, `database/migrations`, docs, performance — ทั้ง repo
+- รายละเอียดเฉพาะ theme/mockup ดูที่ `.cursor/rules/theme.mdc`

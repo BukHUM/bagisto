@@ -1,0 +1,47 @@
+---
+description: Bagisto upgrade-safe customization — ห้ามแก้ core โดยไม่จำเป็น, ชั้นการแก้ไข, บันทึก patch
+alwaysApply: true
+---
+
+# Bagisto — แก้ไขแบบ Upgrade-Safe
+
+อ้างอิง: `docs/development/customizations.md`, `docs/upgrade.md`
+
+## หลักการ
+
+1. **ห้ามแก้ `packages/Webkul/*` โดยตรง** เว้นแต่ไม่มีทางอื่น — และต้องบันทึกใน `docs/development/customizations.md` ทันที
+2. **ห้ามแก้ `vendor/`** — ใช้ Composer / custom package แทน
+3. ทุกการแก้ใหม่ต้องเลือก **ชั้น (layer)** ที่ปลอดภัยที่สุดก่อนเสมอ
+
+## ชั้นการแก้ไข (เลือกจากบนลงล่าง)
+
+| ลำดับ | ชั้น | Path ตัวอย่าง | อัปเกรด |
+|-------|------|---------------|---------|
+| 1 | **Theme** | `resources/themes/beyondary/`, `public/themes/shop/beyondary/` | ปลอดภัย — ไม่โดน composer overwrite |
+| 2 | **App / Config** | `app/`, `config/`, `resources/lang/`, `routes/` (ถ้ามี) | ปลอดภัย |
+| 3 | **DB ของเรา** | `database/migrations/` (app-level) | ปลอดภัย — รัน migrate หลังอัปเกรด |
+| 4 | **Custom Package** | `packages/Beyondary/<Module>/` + ลงทะเบียนใน `bootstrap/providers.php` | แนะนำสำหรับ logic ที่แทนที่ core |
+| 5 | **Core patch** | `packages/Webkul/...` | **เสี่ยง** — ต้องมี patch/บันทึก + แผนย้ายไป layer 4 |
+
+## วิธีแทนที่ core โดยไม่แก้ไฟล์ต้นฉบับ
+
+- **Repository / Service:** สร้าง class สืบทอด (extend) แล้ว `bind()` ใน `App\Providers\AppServiceProvider` หรือ ServiceProvider ของ custom package
+- **Blade / UI ร้านค้า:** child theme `resources/themes/beyondary/views/` (ห้ามแก้ `packages/Webkul/Shop/src/Resources/views/`)
+- **Event / Hook:** ใช้ `view_render_event()` / Laravel Event listener ใน `app/Listeners` หรือ custom package
+- **DataGrid / Controller:** สร้าง class ใหม่ใน custom package + route/controller override (หลีกเลี่ยงแก้ไฟล์ใน Admin package โดยตรง)
+- **Model:** ใช้ Concord proxy ใน `config/concord.php` (ตาม pattern Bagisto) เมื่อต้องเปลี่ยน model behavior
+
+## ก่อนแก้โค้ดทุกครั้ง (checklist)
+
+- [ ] เลือก layer แล้วหรือยัง? (theme/config/migration/package ก่อน core)
+- [ ] ถ้าแตะ `packages/Webkul/*` → อัปเดต `docs/development/customizations.md` ทันที
+- [ ] มีเกณฑ์ทดสอบตาม `bagisto-workflow.mdc` ก่อนปิดงาน
+
+## หลังอัปเกรด Bagisto
+
+1. อ่าน `docs/upgrade.md` ของเวอร์ชันเป้าหมาย
+2. `composer update` / ตามคู่มือ upstream
+3. ตรวจ `docs/development/customizations.md` — re-apply patch หรือ merge custom package
+4. `php artisan migrate` + `php artisan optimize:clear` + `php artisan responsecache:clear`
+5. build assets (theme + shop ตามที่เกี่ยวข้อง)
+6. ทดสอบ checklist ใน customizations.md
