@@ -1,0 +1,67 @@
+---
+description: Beyondary admin theme — design tokens, override paths, build commands
+globs: resources/admin-themes/beyondary-admin/**/*
+alwaysApply: false
+---
+
+# Beyondary Admin Theme (`beyondary-admin`)
+
+**Theme code:** `beyondary-admin` (child of admin `default`)  
+**Activation:** `config/themes.php` → `'admin-default' => 'beyondary-admin'`  
+**ห้ามแก้:** `packages/Webkul/Admin/` — override ผ่าน child theme เท่านั้น
+
+## Mockup & แผน
+
+| ไฟล์ | ใช้เมื่อ |
+|------|---------|
+| `docs/mockup/beyondary_admin_dashboard.html` | สี, layout dashboard, stat cards |
+| `docs/development/admin-theme-plan.md` | phase checklist, architecture |
+
+## Design tokens (Tailwind — `tailwind.config.cjs`)
+
+| Token | Hex | ใช้กับ |
+|-------|-----|--------|
+| `admin-sidebar` | `#2E2720` | พื้น sidebar |
+| `admin-sidebar-active` | `#B88B54` | เมนู active |
+| `admin-surface` | `#F8F6F0` | พื้น main |
+| `admin-card` | `#FFFFFF` | การ์ด / panel |
+| `admin-border` | `#E5DFD4` | เส้นแบ่ง |
+| `admin-text` | `#3A2618` | ข้อความหลัก |
+| `admin-muted` | `#6B4A31` | ข้อความรอง |
+| `admin-primary` | `#B88B54` | CTA / link (แทน `blue-600`) |
+
+**Typography:** `font-sans` = Prompt, `font-display` = Playfair (หัวข้อหน้า)
+
+**ไม่ทำ:** dark/light toggle — ลบ `v-dark`, cookie `dark_mode`, class `dark:*` ใน override
+
+## โครงสร้าง override
+
+```
+resources/admin-themes/beyondary-admin/
+  views/components/layouts/   # shell (index, header, sidebar, anonymous)
+  views/components/           # button, form, datagrid, modal, flash
+  views/dashboard/            # dashboard blades + chart color #B88B54
+  views/catalog|sales|customers/  # index pages ใช้บ่อย
+  views/users/sessions/       # login
+  assets/css|js/
+  vite.config.js, tailwind.config.cjs
+public/themes/admin/beyondary-admin/build/  # output
+```
+
+View ที่ไม่มีใน theme → fallback จาก `packages/Webkul/Admin/src/Resources/views/`
+
+## คำสั่ง
+
+```bash
+cd resources/admin-themes/beyondary-admin && npm run build
+php artisan view:clear
+```
+
+**สลับกลับ admin เดิม:** `'admin-default' => 'default'` ใน `config/themes.php`
+
+## แนวทางแก้ Blade
+
+- คัดลอกจาก package → แก้เฉพาะ class สี/spacing — **อย่า** เปลี่ยน Vue template id หรือโครง `#app`
+- แทน `text-gray-800 dark:text-white` → `text-admin-text`
+- แทน `blue-600` → `admin-primary` (หรือพึ่ง CSS remap ใน `app.css`)
+- Chart bar: `backgroundColor: '#B88B54'` ใน `total-sales.blade.php`

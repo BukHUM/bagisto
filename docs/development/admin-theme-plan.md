@@ -178,7 +178,7 @@ components/
 ### Phase 1 — Design Spec & Mockup (1–2 วัน)
 
 - [x] สร้าง `docs/mockup/beyondary_admin_dashboard.html`
-- [ ] กำหนด tokens สุดท้ายใน `tailwind.config.cjs` ของ theme
+- [x] กำหนด tokens ใน `tailwind.config.cjs` ของ theme
 - [ ] Screenshot admin เดิมเป็น reference (before)
 - [ ] Checklist component: sidebar states, buttons, table, form field, modal, login
 
@@ -200,11 +200,11 @@ components/
 
 ### Phase 3 — Shared Components (3–4 วัน)
 
-- [ ] Button, form controls, flash, datagrid chrome, modal
-- [ ] CSS layer สำหรับ status labels + pagination
-- [ ] แทน primary blue → gold ในส่วนที่ override แล้ว
+- [x] Override: `button`, `flash-group`, `form/control-group/*`, `datagrid/table`, `modal/*`
+- [x] CSS: `.primary-button`, `.secondary-button`, status labels, datagrid, peer-checked gold
+- [x] Form inputs — border/focus โทน Beyondary
 
-**ทดสอบ:**
+**ทดสอบ (มือ):**
 
 - [ ] สร้าง/แก้สินค้า (form ยาว)
 - [ ] Orders list + filter + pagination
@@ -213,25 +213,27 @@ components/
 
 ### Phase 4 — High-Traffic Pages (2–3 วัน)
 
-- [ ] Dashboard cards + charts สีใหม่
-- [ ] Polish หน้า catalog / customers index ถ้ายังไม่สวยพอ
+- [x] Dashboard (`views/dashboard/*`) — stat cards, filters, chart `#B88B54`
+- [x] Index pages: `catalog/products`, `sales/orders`, `customers/customers`
+- [x] Login (`users/sessions/create`) — โทนเดียวกับ shell
 
 **ทดสอบ:** workflow จริง — เพิ่มสินค้า → สั่งซื้อทดสอบ → ดู order ใน admin
 
 ### Phase 5 — Hardening & Rollout (1–2 วัน)
 
-- [ ] เปรียบเทียบกับ admin `default` (side-by-side screenshot)
-- [ ] อัปเดต `docs/development/customizations.md` + `docs/README.md`
-- [ ] (ทางเลือก) Cursor rule `admin-theme.mdc` สั้นๆ ชี้ mockup + tokens
-- [ ] ตั้ง `admin-default` → `beyondary-admin` อย่างเป็นทางการ
-- [ ] `git commit` + push BukHUM
+- [ ] เปรียบเทียบกับ admin `default` (side-by-side screenshot — ทำด้วยมือ)
+- [x] อัปเดต `docs/development/customizations.md` + `docs/README.md`
+- [x] Cursor rule `.cursor/rules/admin-theme.mdc`
+- [x] ตั้ง `admin-default` → `beyondary-admin` อย่างเป็นทางการ
+- [x] ลบ `dark:*` ที่เหลือใน header/sidebar overrides
+- [ ] `git commit` + push BukHUM (เมื่อพร้อม)
 
-**ทดสอบสุดท้าย (checklist)**
+**ทดสอบสุดท้าย (checklist)** — ดูรายละเอียดใน `customizations.md` § Admin Theme QA
 
 - [ ] Chrome + Firefox, ความกว้าง 1280 / 768 / 375
 - [ ] Locale `th` — ข้อความยาวไม่ล้น sidebar
 - [ ] RTL ไม่จำเป็นถ้าใช้แค่ th/en แต่ไม่ทำพัง `dir=rtl`
-- [ ] `php artisan optimize:clear` หลัง deploy
+- [x] `php artisan optimize:clear` หลัง deploy
 
 ---
 

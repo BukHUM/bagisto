@@ -60,12 +60,24 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 |--------|------|
 | แผน / mockup | `docs/development/admin-theme-plan.md`, `docs/mockup/beyondary_admin_dashboard.html` |
 | Theme config | `config/themes.php` (`admin-default` → `beyondary-admin`), `config/bagisto-vite.php` |
-| Blade overrides (Phase 2) | `resources/admin-themes/beyondary-admin/views/components/layouts/` |
+| Blade overrides | `resources/admin-themes/beyondary-admin/views/` — layouts, shared components, dashboard, catalog/orders/customers index, login |
 | Vite/Tailwind | `resources/admin-themes/beyondary-admin/` |
 | Build output | `public/themes/admin/beyondary-admin/build/` |
 | Admin เดิม | ยังอยู่ใน `packages/Webkul/Admin/` — สลับกลับด้วย `admin-default` => `default` |
 
 **Build:** `cd resources/admin-themes/beyondary-admin && npm run build`
+
+**สถานะ rollout:** `admin-default` → `beyondary-admin` (เปิดใช้แล้ว) · สลับกลับ: `'admin-default' => 'default'`
+
+**Override สรุป (11+ กลุ่มไฟล์):**
+
+| กลุ่ม | Path ใน theme |
+|-------|----------------|
+| Layout shell | `views/components/layouts/` |
+| Shared UI | `views/components/{button,flash-group,form,datagrid,modal}/` |
+| Dashboard | `views/dashboard/*` (chart bar `#B88B54`) |
+| Index หลัก | `catalog/products`, `sales/orders`, `customers/customers` |
+| Login | `views/users/sessions/create` |
 
 ### Performance indexes (DB)
 
@@ -136,6 +148,28 @@ upstream → bagisto/bagisto     (อ้างอิง core — ห้าม pu
 - [ ] Add to cart / mini-cart
 - [ ] Channel locale/currency (th, THB)
 - [ ] `php artisan migrate:status` — migration ของเราครบ
+
+## Admin Theme QA (`beyondary-admin`)
+
+ทดสอบด้วยมือหลังแก้ theme หรือก่อน deploy:
+
+| หน้า / พฤติกรรม | ตรวจ |
+|-----------------|------|
+| `/admin/login` | การ์ดโทนอุ่น, ปุ่มทอง, ไม่มี dark toggle |
+| Dashboard | stat cards, filter วันที่, กราฟ bar สีทอง |
+| Catalog → Products | หัวข้อ Playfair, datagrid, สร้างสินค้า modal |
+| Sales → Orders | multi-row grid, export, สร้าง order |
+| Customers | list + filter |
+| Sidebar | semi-dark คงที่, collapse, submenu flyout |
+| Header | mega search, notifications, profile menu |
+| Form ยาว (แก้สินค้า) | input focus ทอง, validation errors |
+| Modal ลบ | ยืนยัน + flash toast |
+| Responsive | 1280 / 768 / 375 — sidebar drawer บน mobile |
+| Locale `th` | ข้อความยาวไม่ล้น sidebar |
+
+**เปรียบเทียบกับ admin เดิม:** ตั้ง `'admin-default' => 'default'` ชั่วคราว → screenshot คู่กับ `beyondary-admin` แล้ว revert config
+
+**หลัง deploy:** `php artisan optimize:clear`
 
 ---
 

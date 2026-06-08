@@ -43,6 +43,8 @@ module.exports = {
                 "admin-sidebar-active": "#B88B54",
                 "admin-sidebar-text": "#E8E2D9",
                 "admin-sidebar-muted": "#A89B8C",
+                "admin-sidebar-submenu": "#231F1A",
+                "admin-sidebar-submenu-text": "#C9BFB0",
                 "admin-surface": "#F8F6F0",
                 "admin-card": "#FFFFFF",
                 "admin-border": "#E5DFD4",

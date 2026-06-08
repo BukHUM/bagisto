@@ -23,7 +23,8 @@
 - `.cursor/rules/bagisto-workflow.mdc` — workflow ทั้งโปรเจกต์ (todo list, ทดสอบทีละ phase)
 - `.cursor/rules/bagisto-performance.mdc` — performance
 - `.cursor/rules/bagisto-security.mdc` — security
-- `.cursor/rules/theme.mdc` — Beyondary theme (อ้างอิง `docs/mockup/`)
+- `.cursor/rules/theme.mdc` — Beyondary shop theme (อ้างอิง `docs/mockup/`)
+- `.cursor/rules/admin-theme.mdc` — Beyondary admin theme (`beyondary-admin`, tokens + build)
 
 ## เอกสารที่ root (มาตรฐาน upstream)
 

@@ -92,17 +92,18 @@
 
         {!! view_render_event('bagisto.admin.layout.content.before') !!}
 
-        <x-admin::layouts.header />
-
         <div
-            class="group/container {{ request()->cookie('sidebar_collapsed') ?? 0 ? 'sidebar-collapsed' : 'sidebar-not-collapsed' }} flex flex-col lg:flex-row gap-0 lg:gap-4"
+            class="group/container {{ request()->cookie('sidebar_collapsed') ?? 0 ? 'sidebar-collapsed' : 'sidebar-not-collapsed' }}"
             ref="appLayout"
         >
-            <div class="lg:fixed lg:top-[62px] lg:left-0 rtl:lg:right-0 rtl:lg:left-auto lg:z-10 w-full lg:w-auto">
+        <x-admin::layouts.header />
+
+        <div class="flex flex-col lg:flex-row gap-0">
+            <div class="lg:fixed lg:top-14 lg:left-0 lg:z-[1000] w-full lg:w-[270px] rtl:lg:right-0 rtl:lg:left-auto group-[.sidebar-collapsed]/container:lg:w-[70px]">
                 <x-admin::layouts.sidebar />
             </div>
 
-            <div class="flex min-h-[calc(100vh-62px)] max-w-full flex-1 flex-col bg-admin-surface transition-all duration-300 pt-3 px-2 sm:px-4 lg:pt-3 lg:px-4 lg:ltr:pl-[286px] lg:group-[.sidebar-collapsed]/container:ltr:pl-[85px] lg:rtl:pr-[286px] lg:group-[.sidebar-collapsed]/container:rtl:pr-[85px]">
+            <div class="flex min-h-[calc(100vh-3.5rem)] max-w-full flex-1 flex-col bg-admin-surface transition-all duration-300 pt-3 px-2 sm:px-4 lg:pt-4 lg:px-4 lg:ltr:ml-[270px] lg:group-[.sidebar-collapsed]/container:ltr:ml-[70px] lg:rtl:mr-[270px] lg:group-[.sidebar-collapsed]/container:rtl:mr-[70px]">
                 <div class="pb-4 lg:pb-6">
                     @if (! request()->routeIs('admin.configuration.index'))
                         <div class="overflow-x-auto">
@@ -124,6 +125,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
         {!! view_render_event('bagisto.admin.layout.content.after') !!}

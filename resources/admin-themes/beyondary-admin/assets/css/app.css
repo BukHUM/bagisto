@@ -15,9 +15,6 @@
         background-color: rgba(0, 68, 242, .2);
     }
 
-    body {
-        @apply bg-gray-50;
-    }
 
     button:disabled {
         @apply cursor-not-allowed opacity-50;
@@ -63,9 +60,6 @@
         color: #d1d5db;
     }
     
-    .box-shadow {
-        @apply border-[1px] dark:border-gray-800 shadow-[0px_0px_0px_0px_rgba(0,0,0,0.03),0px_1px_1px_0px_rgba(0,0,0,0.03),0px_3px_3px_0px_rgba(0,0,0,0.03),0px_6px_4px_0px_rgba(0,0,0,0.02),0px_11px_4px_0px_rgba(0,0,0,0.00),0px_17px_5px_0px_rgba(0,0,0,0.00)];
-    }
 
     .icon-phone:before {
         content: "\e94f";
@@ -398,15 +392,15 @@
     }
 
     .primary-button {
-        @apply bg-blue-600 border border-blue-700 cursor-pointer flex focus:opacity-[0.9] font-semibold gap-x-1 hover:opacity-[0.9] items-center place-content-center px-3 py-1.5 rounded-md text-gray-50 transition-all;
+        @apply flex cursor-pointer place-content-center items-center gap-x-1 rounded-md border border-admin-primary-hover bg-admin-primary px-3 py-1.5 font-semibold text-white transition-all hover:bg-admin-primary-hover focus:opacity-90;
     }
 
     .secondary-button {
-        @apply flex cursor-pointer place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-blue-600 bg-white px-3 py-1.5 font-semibold text-blue-600 transition-all hover:bg-[#eff6ff61] focus:bg-[#eff6ff61] dark:border-gray-400 dark:bg-gray-800 dark:text-white dark:hover:opacity-80;
+        @apply flex cursor-pointer place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-admin-primary bg-admin-card px-3 py-1.5 font-semibold text-admin-primary transition-all hover:bg-admin-primary/10 focus:bg-admin-primary/10;
     }
 
     .transparent-button {
-        @apply flex cursor-pointer appearance-none place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-transparent px-3 py-1.5 font-semibold text-gray-600 transition-all marker:shadow hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-950;
+        @apply flex cursor-pointer appearance-none place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-transparent px-3 py-1.5 font-semibold text-admin-muted transition-all hover:bg-admin-surface focus:bg-admin-surface;
     }
 
     .journal-scroll::-webkit-scrollbar {
@@ -416,15 +410,15 @@
     }
 
     .journal-scroll::-webkit-scrollbar-track {
-        background-color: #fff;
+        background-color: #2e2720;
         cursor: pointer;
         border-radius: 12px;
-        border: 1px solid #e9e9e9;
+        border: 1px solid #3a3229;
     }
 
     .journal-scroll::-webkit-scrollbar-thumb {
         cursor: pointer;
-        background-color: #e9e9e9;
+        background-color: #a89b8c;
         border-radius: 12px;
         border: 3px solid transparent;
         background-clip: content-box;
@@ -465,7 +459,7 @@
 	}
 
 	.label-processing{
-		@apply bg-cyan-600;
+		@apply bg-admin-primary text-admin-text;
     }
 
 	.label-completed,
@@ -570,13 +564,105 @@
         background-color: rgba(184, 139, 84, 0.25);
     }
 
-    .beyondary-admin-sidebar [class^="icon-"],
-    .beyondary-admin-sidebar [class*=" icon-"] {
-        color: #a89b8c;
+    .admin-header-action {
+        @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-admin-border bg-admin-surface text-admin-muted transition-all hover:border-admin-primary/30 hover:bg-admin-primary/5 hover:text-admin-primary;
     }
 
-    .beyondary-admin-sidebar .active [class^="icon-"],
-    .beyondary-admin-sidebar .active [class*=" icon-"] {
+    .admin-header-search-input {
+        @apply h-9 py-0 leading-9 shadow-sm;
+    }
+
+    .admin-header-logo-zone {
+        @apply relative z-[1];
+    }
+
+    .beyondary-admin-header {
+        @apply shadow-none;
+    }
+
+    .beyondary-admin-header [class^="icon-"],
+    .beyondary-admin-header [class*=" icon-"] {
+        color: inherit;
+    }
+
+    .beyondary-admin-sidebar .sidebar-scroll {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .beyondary-admin-sidebar .sidebar-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link {
+        @apply text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link:hover {
+        @apply bg-admin-sidebar-hover text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link--open {
+        @apply bg-admin-sidebar-hover font-medium text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link--active {
+        @apply bg-admin-sidebar-active font-semibold text-admin-text shadow-sm;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-group {
+        @apply mb-0.5 overflow-hidden rounded-md;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-group--expanded .sidebar-nav-link--open {
+        @apply rounded-b-none;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-panel {
+        @apply grid overflow-hidden transition-[grid-template-rows] duration-300 ease-in-out;
+        grid-template-rows: 0fr;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-panel--expanded {
+        grid-template-rows: 1fr;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-panel__inner {
+        @apply min-h-0 border-t border-admin-sidebar-active/20 bg-admin-sidebar-submenu px-2 pb-2 pt-1.5 opacity-0 transition-opacity duration-300 ease-in-out;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-panel--expanded .sidebar-submenu-panel__inner {
+        @apply opacity-100;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-link {
+        @apply block rounded-md px-2.5 py-1.5 text-sm text-admin-sidebar-submenu-text transition-colors duration-200;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-link:hover {
+        @apply bg-admin-sidebar-hover text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar .sidebar-submenu-link--active {
+        @apply bg-admin-sidebar-active/35 font-medium text-admin-sidebar-text;
+    }
+
+    .beyondary-admin-sidebar [class^="icon-"],
+    .beyondary-admin-sidebar [class*=" icon-"] {
+        color: #d4c9bc;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link:hover [class^="icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link:hover [class*=" icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link--open [class^="icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link--open [class*=" icon-"] {
+        color: #e8e2d9;
+    }
+
+    .beyondary-admin-sidebar .sidebar-nav-link--active [class^="icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link--active [class*=" icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link--active:hover [class^="icon-"],
+    .beyondary-admin-sidebar .sidebar-nav-link--active:hover [class*=" icon-"] {
         color: #3a2618;
     }
 
@@ -607,5 +693,25 @@
 
     .box-shadow {
         @apply border-admin-border bg-admin-card shadow-sm;
+    }
+
+    .peer-checked\:text-blue-600 {
+        @apply text-admin-primary;
+    }
+
+    .peer-checked\:bg-blue-600 {
+        @apply bg-admin-primary;
+    }
+
+    .hover\:bg-\[\#eff6ff61\]:hover {
+        @apply bg-admin-primary/10;
+    }
+
+    .focus\:bg-\[\#eff6ff61\]:focus {
+        @apply bg-admin-primary/10;
+    }
+
+    .focus\:ring-blue-300:focus {
+        @apply ring-admin-primary/30;
     }
 }
